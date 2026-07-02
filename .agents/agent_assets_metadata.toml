@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "SczHI2lMvGmyQOt_-OGKz"
+uri = "file://r10.6-ui-patch.tar.gz"
+type = "unspecified"
+title = "r10.6-ui-patch — Next.js App Router UI Layer"
