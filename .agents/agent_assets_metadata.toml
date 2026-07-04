@@ -18,3 +18,9 @@ id = "TFAmUkO-VDVCu7aYng_qM"
 uri = "file://exports/unixsee_campaign_gateway-r10.9-agents-ui-polish.zip"
 type = "unspecified"
 title = "unixsee_campaign_gateway-r10.9-agents-ui-polish.zip"
+
+[[outputs]]
+id = "sujpGN_8vXzzAHlTjAaP2"
+uri = "file://exports/unixsee_campaign_gateway-r10.10-release-production-ui-polish.zip"
+type = "unspecified"
+title = "unixsee_campaign_gateway-r10.10-release-production-ui-polish.zip"
