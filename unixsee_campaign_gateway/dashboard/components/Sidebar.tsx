@@ -3,6 +3,7 @@ import type { Permission } from "../lib/rbac";
 const items: { href: string; label: string; permission: Permission; icon: string }[] = [
   { href: "/", label: "Dashboard", permission: "dashboard.view", icon: "▦" },
   { href: "/agents", label: "Agents", permission: "agents.view", icon: "◉" },
+  { href: "/sync", label: "Sync", permission: "agents.view", icon: "⇄" },
   { href: "/release", label: "Release", permission: "release.view", icon: "◇" },
   { href: "/mother", label: "Mother", permission: "settings.view", icon: "◎" },
   { href: "/diagnostics", label: "Diagnostics", permission: "diagnostics.view", icon: "⌁" },

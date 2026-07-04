@@ -60,3 +60,9 @@ id = "7WLSC1ZMszF2Snwvqfnte"
 uri = "file://exports/unixsee_campaign_gateway-r10.16-mother-agent-product-surface.zip"
 type = "unspecified"
 title = "R10.16 — Mother + Agent Product Surface"
+
+[[outputs]]
+id = "xuVmNQlAQfAFH_v3PwWEZ"
+uri = "file://exports/unixsee_campaign_gateway-r10.17-final-visual-acceptance.zip"
+type = "unspecified"
+title = "R10.17 — Final Visual Acceptance"

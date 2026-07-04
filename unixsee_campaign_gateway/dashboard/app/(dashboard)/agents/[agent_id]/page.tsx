@@ -88,7 +88,7 @@ export default async function AgentDetailPage({ params }: Params) {
 
       {/* R10.16: Posture notice for stale/unknown agents */}
       {isUnavailablePosture && (
-        <div className="readonly-banner" style={{ borderLeftColor: status === "stale" ? "var(--tone-warning, #d97706)" : "var(--tone-neutral, #6b7280)" }}>
+        <div className={`readonly-banner ${status === "stale" ? "tone-warning" : "tone-neutral"}`}>
           <span>{status === "stale" ? "!" : "?"}</span>
           <span>
             <b>Agent {status === "stale" ? "stale" : "status unknown"}.</b>{" "}

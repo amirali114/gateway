@@ -9,7 +9,7 @@ import { dashboardSecuritySummary, requirePermission } from "../../../../lib/aut
 
 export const dynamic = "force-dynamic";
 
-function ok(v: boolean | undefined) { return <StatusPill value={v ? "pass" : "unknown"} />; }
+function ok(v: boolean | undefined) { return <StatusPill value={v ? "pass" : "fail"} />; }
 
 export default async function ProductionReadinessPage() {
   await requirePermission("settings.view");

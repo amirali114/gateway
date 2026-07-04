@@ -112,7 +112,7 @@ export default async function MotherPage() {
                 {storage.schema_version !== undefined ? <tr><th>Schema version</th><td>{valueOrDash(storage.schema_version)}</td></tr> : null}
                 {storage.migration_status ? <tr><th>Migration status</th><td><StatusPill value={storage.migration_status} /></td></tr> : null}
                 {storage.last_query_at ? <tr><th>Last query</th><td className="mono">{valueOrDash(storage.last_query_at)}</td></tr> : null}
-                {storage.last_error ? <tr><th>Last error</th><td style={{ color: "var(--tone-danger, #dc2626)" }}>{storage.last_error}</td></tr> : null}
+                {storage.last_error ? <tr><th>Last error</th><td style={{ color: "var(--danger, #ef4444)" }}>{storage.last_error}</td></tr> : null}
               </tbody></table>
               {storage.persisted_objects && Object.keys(storage.persisted_objects).length > 0 && (
                 <div style={{ marginTop: 16 }}>

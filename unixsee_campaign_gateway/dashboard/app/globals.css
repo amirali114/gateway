@@ -118,6 +118,10 @@ button:disabled, input:disabled, select:disabled { opacity: 0.55; cursor: not-al
 .remediation-hint { display: flex; gap: 6px; align-items: flex-start; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-soft); color: #fbbf24; font-size: 12px; line-height: 1.55; }
 .readonly-banner { display: flex; align-items: center; gap: 10px; border: 1px solid rgba(34,211,238,.24); background: rgba(34,211,238,.06); color: #a5f3fc; border-radius: 12px; padding: 10px 13px; font-size: 12.5px; line-height: 1.5; margin-bottom: 16px; }
 .readonly-banner b { color: #e0fbff; }
+.readonly-banner.tone-warning { border-color: rgba(245,158,11,.32); background: rgba(245,158,11,.07); color: #fde68a; }
+.readonly-banner.tone-warning b { color: #fef3c7; }
+.readonly-banner.tone-neutral { border-color: rgba(148,163,184,.22); background: rgba(148,163,184,.05); color: #94a3b8; }
+.readonly-banner.tone-neutral b { color: #cbd5e1; }
 .checklist-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .checklist-card { border: 1px solid var(--border-soft); background: rgba(15,23,42,.65); border-radius: 14px; padding: 13px 14px; display: flex; gap: 10px; align-items: flex-start; }
 .checklist-card-icon { width: 24px; height: 24px; border-radius: 8px; display: grid; place-items: center; flex: none; font-size: 12px; margin-top: 1px; background: rgba(16,185,129,.14); color: #34d399; }
