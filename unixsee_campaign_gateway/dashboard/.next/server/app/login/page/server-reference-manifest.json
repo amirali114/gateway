@@ -1,0 +1,17 @@
+{
+  "node": {
+    "4005d44e1bee7b2f418c1e063d56a6b976600aea1c": {
+      "workers": {
+        "app/login/page": {
+          "moduleId": 82658,
+          "async": false,
+          "exportedName": "loginAction",
+          "filename": "unixsee_campaign_gateway/dashboard/app/login/actions.ts"
+        }
+      },
+      "exportedName": "loginAction",
+      "filename": "unixsee_campaign_gateway/dashboard/app/login/actions.ts"
+    }
+  },
+  "edge": {}
+}

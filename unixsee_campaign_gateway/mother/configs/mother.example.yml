@@ -1,0 +1,72 @@
+# Unixsee Mother/Core example config.
+# Safe default: local-only. Do not bind Mother publicly unless firewalling trusted Agent source IPs.
+
+server:
+  listen_addr: "127.0.0.1:8732"
+  mode: "dev"
+
+# Backward-compatible R7/R9 key. server.listen_addr above is preferred for deployment profiles.
+mother:
+  listen_addr: "127.0.0.1:8732"
+  mode: "dev"
+
+security:
+  agent_shared_secret: ""
+  require_signature: false
+  allow_remote_bind: false
+  signature_max_skew_seconds: 300
+
+# For remote staging Agents only, explicitly bind and firewall Mother:
+# server:
+#   listen_addr: "0.0.0.0:8732"
+# security:
+#   allow_remote_bind: true
+#   require_signature: true
+#   agent_shared_secret: "replace-with-shared-secret"
+
+# Debug policy endpoint is disabled by default.
+debug:
+  enabled: false
+
+management:
+  enabled: true
+  write_enabled: false
+  # Required for Dashboard draft/publish when write_enabled=true.
+  # Never log or expose this token.
+  api_token: ""
+
+storage:
+  # memory is available for throwaway local tests. Use json for staging persistence.
+  engine: "json"
+  path: "./data/mother"
+  sync_writes: true
+  backup_on_migration: true
+
+logging:
+  level: "info"
+  path: "./logs/unixsee-mother.log"
+
+# Optional R9.9 PostgreSQL production profile. JSON remains the staging default above.
+# To enable in a production build that includes a real PostgreSQL driver/profile:
+# storage:
+#   engine: "postgres"
+#   path: "/var/lib/unixsee-gateway/mother"
+#   sync_writes: true
+#   backup_on_migration: true
+#   postgres:
+#     dsn: "${UNIXSEE_MOTHER_POSTGRES_DSN}"
+#     max_open_conns: 10
+#     max_idle_conns: 5
+#     conn_max_lifetime_seconds: 300
+#     sslmode: "require"
+
+alerts:
+  enabled: true
+  evaluation_interval_seconds: 60
+  stale_after_seconds: 90
+  critical_stale_after_seconds: 300
+  max_alerts: 1000
+
+notifications:
+  enabled: false
+  channels: []

@@ -1,0 +1,3 @@
+module.exports=[25746,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(56786);a.n(d("[project]/unixsee_campaign_gateway/dashboard/node_modules/next/dist/client/components/builtin/global-error.js <module evaluation>"))},2390,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(56786);a.n(d("[project]/unixsee_campaign_gateway/dashboard/node_modules/next/dist/client/components/builtin/global-error.js"))},63454,a=>{"use strict";a.i(25746);var b=a.i(2390);a.n(b)},75382,a=>{a.n(a.i(63454))}];
+
+//# sourceMappingURL=0gyn_next_dist_client_components_builtin_global-error_1o4ehkc.js.map

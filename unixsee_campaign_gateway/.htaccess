@@ -1,0 +1,10 @@
+Options -Indexes
+# Unixsee Gateway hardening: never expose backups, runtime state, secrets or local env files.
+<FilesMatch "(?i)(^\.uxwr_secret\.php$|\.bak$|\.old$|\.orig$|\.save$|\.sql$|\.sqlite$|\.sqlite-wal$|\.sqlite-shm$|\.db$|\.log$|\.lock$|\.env$|\.yml$|\.yaml$|\.ini$|\.json$|\.zip$)">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "same-origin"
+</IfModule>

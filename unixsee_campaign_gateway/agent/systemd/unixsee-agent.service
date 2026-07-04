@@ -1,0 +1,20 @@
+[Unit]
+Description=Unixsee Local Agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=unixsee-agent
+Group=unixsee-agent
+ExecStart=/usr/local/unixsee-agent/unixsee-agent --config /etc/unixsee-agent/agent.yml
+Restart=always
+RestartSec=2
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/var/lib/unixsee-agent /var/log/unixsee-agent
+
+[Install]
+WantedBy=multi-user.target

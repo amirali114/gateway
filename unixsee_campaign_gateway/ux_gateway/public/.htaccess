@@ -1,0 +1,7 @@
+# Unixsee Campaign Gateway R4.2
+# Do not serve the legacy public front controller.
+Require all denied
+
+# Apache 2.2 / older LiteSpeed compatibility fallback
+Order allow,deny
+Deny from all

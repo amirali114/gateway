@@ -1,0 +1,23 @@
+[Unit]
+Description=Unixsee Agent (shadow-only, local bind)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=unixsee-agent
+Group=unixsee-agent
+EnvironmentFile=-/etc/unixsee-gateway/agent.env
+ExecStartPre=/usr/bin/install -d -o unixsee-agent -g unixsee-agent -m 0750 /var/lib/unixsee-gateway/agent
+ExecStartPre=/usr/bin/install -d -o unixsee-agent -g unixsee-agent -m 0750 /var/log/unixsee-gateway
+ExecStart=/opt/unixsee-campaign-gateway/bin/unixsee-agent --config /etc/unixsee-gateway/agent.yml
+Restart=always
+RestartSec=2
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/var/lib/unixsee-gateway/agent /var/log/unixsee-gateway
+
+[Install]
+WantedBy=multi-user.target

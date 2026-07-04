@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. "$SCRIPT_DIR/lib-production.sh"
+WEBROOT="${UXGW_WEBROOT:-}"
+WRAPPER_DIR="${UXGW_WRAPPER_DIR:-unixsee-gateway}"
+PRIVATE_RUNTIME_FILE="${UXGW_PHP_PRIVATE_RUNTIME:-$PREFIX/gateway.php}"
+[[ -n "$WEBROOT" ]] || fail "set UXGW_WEBROOT"
+safe_webroot_path "$WEBROOT" || fail "unsafe WEBROOT"
+[[ -f "$WEBROOT/$WRAPPER_DIR/gateway.php" ]] || fail "wrapper missing: $WEBROOT/$WRAPPER_DIR/gateway.php"
+size="$(wc -c < "$WEBROOT/$WRAPPER_DIR/gateway.php")"
+[[ "$size" -le 8192 ]] || fail "wrapper too large: ${size} bytes"
+[[ -f "$PRIVATE_RUNTIME_FILE" ]] || warn "private runtime not found at configured path: $PRIVATE_RUNTIME_FILE"
+validate_no_forbidden_webroot_files "$WEBROOT" "$WRAPPER_DIR"
+pass "PHP wrapper exposure validation completed"

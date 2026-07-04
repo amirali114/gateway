@@ -1,0 +1,1768 @@
+:root {
+    --ux-primary: #ff6a00;
+    --ux-primary-soft: rgba(255,106,0,0.12);
+    --ux-border-soft: rgba(255,255,255,0.12);
+    --ux-border: rgba(148,163,184,0.18);
+    --ux-surface: rgba(12,12,28,0.72);
+    --ux-surface-muted: rgba(8,8,22,0.85);
+    --ux-bg-glass: rgba(10,10,26,0.78);
+}
+* {
+    box-sizing:border-box;
+}
+body {
+    margin:0;
+    padding:18px 12px 24px;
+    min-height:100vh;
+    font-family:var(--ux-font-ui);
+    font-size:14px;
+    line-height:1.7;
+    background:
+        radial-gradient(circle at top left, #1a2a6c, transparent 55%),
+        radial-gradient(circle at bottom right, #b21f1f, transparent 55%),
+        linear-gradient(135deg,#050816,#050816);
+    color:#f5f5f7;
+    -webkit-font-smoothing: antialiased;
+    font-smooth: antialiased;
+    text-rendering: optimizeLegibility;
+}
+html[dir="rtl"] body {
+    direction: rtl;
+    text-align: right;
+}
+html[dir="rtl"] .ux-shell,
+html[dir="rtl"] .ux-section,
+html[dir="rtl"] .ux-card,
+html[dir="rtl"] .ux-card-header,
+html[dir="rtl"] label {
+    text-align: right;
+}
+:lang(en),
+input::placeholder,
+textarea::placeholder {
+    font-family: var(--ux-font-en) !important;
+}
+
+.ux-shell {
+    /* Expand admin panel to better utilize horizontal space on large screens */
+    width:100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding-left:20px;
+    padding-right:20px;
+}
+.ux-header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+    gap:12px;
+}
+
+/* Hide default header elements and show team logo instead */
+.ux-app-icon,
+.ux-header-title h1,
+.ux-header-sub,
+.ux-header-badges {
+    display: none !important;
+}
+.ux-header-gif {
+    /* hide header gif; logo shown in status card instead */
+    display: none !important;
+    align-items: center;
+    height: 40px;
+    margin-right: 10px;
+}
+.ux-header-gif img {
+    height: 40px;
+    width: auto;
+    border-radius: 6px;
+}
+.ux-live-logo {
+    /* hide logo in live header; will be repositioned in status card */
+    display: none !important;
+}
+.ux-live-logo img {
+    height: 32px;
+    width: auto;
+}
+/* Hide original submit wrappers since we use a floating actions container */
+.ux-submit {
+    display: none !important;
+}
+/* Floating action container for buttons */
+.ux-actions-floating {
+    position: fixed;
+    bottom: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px 16px;
+    border-radius: 24px;
+    width: fit-content;
+    /* Use a lighter glass effect with reduced opacity so the underlying fields remain visible */
+    background: rgba(14, 20, 40, 0.25);
+    backdrop-filter: blur(14px) saturate(150%);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+html[dir="rtl"] .ux-actions-floating { left: 20px; right: auto; }
+html[dir="ltr"] .ux-actions-floating { right: 20px; left: auto; }
+
+/* Ensure buttons inside the floating container can be clicked while the container itself allows click-through */
+.ux-actions-floating button {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Icons within floating buttons */
+.ux-btn-icon svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+
+/* Floating actions are icon-only to avoid long labels; use title/aria-label (tooltips) for meaning */
+.ux-actions-floating .ux-btn-label { display: none; }
+.ux-actions-floating button { justify-content: center; min-width: 48px; }
+.ux-actions-floating .ux-btn-icon { margin: 0; }
+
+/* Hide the button label on very small screens to save space */
+@media (max-width: 480px) {
+    .ux-actions-floating .ux-btn-label {
+        display: none;
+    }
+    .ux-btn-icon svg {
+        margin: 0;
+    }
+}
+
+/* Responsive adjustments for tablets and phones */
+@media (max-width: 768px) {
+    /* Reduce side padding of the main container to use more screen real estate */
+    .ux-shell {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    /* Allow the pill row to wrap and align items */
+    .ux-pills {
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    /* Adjust status logo spacing and size */
+    .ux-status-logo {
+        margin-top: 8px;
+        margin-bottom: 4px;
+    }
+    .ux-status-logo img {
+        height: 32px;
+    }
+    /* Shrink and refine floating action buttons */
+    .ux-actions-floating {
+        padding: 12px 16px;
+        border-radius: 16px;
+        gap: 8px;
+        font-size: 14px;
+        max-width: 90%;
+    }
+    .ux-actions-floating button {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+    html[dir="rtl"] .ux-actions-floating { left: 10px; right: auto; }
+    html[dir="ltr"] .ux-actions-floating { right: 10px; left: auto; }
+}
+
+/* Layout tweaks for small screens */
+@media (max-width: 768px) {
+    /* Keep pills in a flexible row but allow wrapping */
+    .ux-pills {
+        flex-wrap: wrap;
+    }
+    .ux-pill {
+        width: auto;
+        margin: 0;
+    }
+    /* Place the status logo at the beginning of the pill row on small screens */
+    .ux-status-logo {
+        order: -1 !important;
+        margin-top: 0;
+        margin-bottom: 0;
+        /* Override automatic alignment from larger-screen rules */
+        margin-inline-start: 0 !important;
+        margin-inline-end: 0 !important;
+    }
+}
+
+.ux-status-logo {
+    /* Align the logo to the far edge of the pill row */
+    margin-inline-start: auto;
+    display: flex;
+    align-items: center;
+}
+body[dir="rtl"] .ux-status-logo {
+    margin-inline-start: 0;
+    margin-inline-end: auto;
+}
+.ux-status-logo img {
+    height: 36px;
+    width: auto;
+}
+.ux-header-title {
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+.ux-app-icon {
+    width:40px;
+    height:40px;
+    border-radius:16px;
+    background:conic-gradient(from 160deg,#ff6a00,#ff1f4b,#7441ff,#ff6a00);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 18px 40px rgba(0,0,0,0.75);
+    flex-shrink:0;
+}
+.ux-app-icon span {
+    font-weight:700;
+    font-size:18px;
+    color:#fff;
+}
+h1 {
+    font-size:20px;
+    margin:0;
+}
+.ux-header-sub {
+    font-size:12px;
+    opacity:0.85;
+    margin-top:2px;
+}
+.ux-header-badges {
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    font-size:11px;
+}
+.ux-badge {
+    padding:3px 9px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,0.16);
+    background:rgba(255,255,255,0.04);
+}
+
+.ux-main-card {
+    margin-top:10px;
+    border-radius:26px;
+    padding:18px 18px 20px;
+    background:var(--ux-bg-glass);
+    border:1px solid rgba(255,255,255,0.16);
+    box-shadow:
+        0 22px 60px rgba(0,0,0,0.9),
+        0 0 0 1px rgba(255,255,255,0.05);
+    backdrop-filter:blur(28px);
+    position: relative;
+    -webkit-backdrop-filter:blur(28px);
+}
+
+.ux-pills {
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-bottom:14px;
+    font-size:11px;
+}
+.ux-pill {
+    padding:4px 10px;
+    border-radius:999px;
+    background:rgba(15,15,35,0.8);
+    border:1px solid rgba(255,255,255,0.1);
+}
+.ux-pill.on {
+    background:rgba(46,125,50,0.35);
+    border-color:rgba(129,199,132,0.9);
+}
+.ux-pill.off {
+    background:rgba(183,28,28,0.35);
+    border-color:rgba(239,154,154,0.9);
+}
+
+.ux-tabs {
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-bottom:14px;
+    font-size:11px;
+}
+.ux-tabs a {
+    text-decoration:none;
+    color:#f5f5f7;
+    padding:5px 10px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,0.14);
+    background:rgba(15,15,35,0.75);
+}
+.ux-tabs a:hover {
+    border-color:var(--ux-primary);
+    background:rgba(255,255,255,0.04);
+}
+
+/* Active state styling for tabs */
+.ux-tabs a.active {
+    border-color:var(--ux-primary);
+    background:var(--ux-primary-soft);
+    color:#fff;
+}
+
+/* Responsive behaviour for tabs on small screens */
+@media (max-width:640px) {
+    .ux-tabs {
+        overflow-x:auto;
+        flex-wrap:nowrap;
+        white-space:nowrap;
+        padding-bottom:4px;
+    }
+    .ux-tabs a {
+        flex:0 0 auto;
+        white-space:nowrap;
+    }
+}
+
+/*
+ * The duplicate tabs navigation that previously appeared below the Redis card
+ * has been removed from the markup. Therefore there is no need for a CSS
+ * rule to hide extra `.ux-tabs`. Removing the rule avoids invalid `:not()`
+ * syntax that can cause the browser to ignore the stylesheet. The only
+ * navigation tabs in the document now live within the `.ux-tabs-container`.
+ */
+
+/* Container for the navigation tabs and their section content */
+.ux-tabs-container {
+    overflow-x:auto;
+    /* Add space above and below the tabs to separate from the Redis card and settings */
+    margin:16px 0;
+}
+
+/* Custom scrollbar styling for the tabs container */
+.ux-tabs-container::-webkit-scrollbar {
+    height:6px;
+}
+.ux-tabs-container::-webkit-scrollbar-track {
+    background:rgba(255,255,255,0.08);
+    border-radius:3px;
+}
+.ux-tabs-container::-webkit-scrollbar-thumb {
+    background:var(--ux-primary-soft);
+    border-radius:3px;
+}
+
+/* Apply a consistent scrollbar style to error lists and decision tables */
+.ux-all-error-list::-webkit-scrollbar,
+#ux-smart-decisions-table::-webkit-scrollbar {
+    width:6px;
+    height:6px;
+}
+.ux-all-error-list::-webkit-scrollbar-track,
+#ux-smart-decisions-table::-webkit-scrollbar-track {
+    background:rgba(255,255,255,0.08);
+    border-radius:3px;
+}
+.ux-all-error-list::-webkit-scrollbar-thumb,
+#ux-smart-decisions-table::-webkit-scrollbar-thumb {
+    background:var(--ux-primary-soft);
+    border-radius:3px;
+}
+
+fieldset {
+    border:none;
+    border-radius:20px;
+    margin-bottom:12px;
+    padding:12px 12px 10px;
+    background:rgba(8,8,22,0.85);
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.55),
+        0 0 0 1px rgba(255,255,255,0.05);
+}
+legend {
+    padding:0 4px;
+    font-size:12px;
+    opacity:0.9;
+}
+label {
+    display:block;
+    font-size:12px;
+    margin:6px 0 2px;
+}
+
+input[type="text"],
+input[type="number"],
+textarea,
+select,
+input[type="color"] {
+    width:100%;
+    box-sizing:border-box;
+    padding:7px 9px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.18);
+    background:rgba(5,8,22,0.9);
+    color:#fff;
+    font-size:12px;
+    outline:none;
+}
+input[type="text"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+    border-color:var(--ux-primary);
+    box-shadow:0 0 0 1px var(--ux-primary-soft);
+}
+input[type="color"] {
+    padding:0;
+    height:32px;
+    cursor:pointer;
+}
+textarea {
+    min-height:60px;
+}
+
+.ux-row {
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+.ux-col-3 {
+    flex:1 1 30%;
+}
+.ux-col-2 {
+    flex:1 1 45%;
+}
+
+.ux-checkbox-inline {
+    margin-top:6px;
+    font-size:12px;
+    display:flex;
+    align-items:flex-start;
+    gap:6px;
+}
+.ux-checkbox-inline input[type="checkbox"] {
+    margin-top:3px;
+}
+
+.ux-message {
+    padding:8px 10px;
+    border-radius:14px;
+    margin-bottom:10px;
+    font-size:12px;
+    border:1px solid rgba(255,255,255,0.16);
+}
+.ux-message.success {
+    background:rgba(27,94,32,0.8);
+    color:#e8f5e9;
+}
+.ux-message.error {
+    background:rgba(183,28,28,0.85);
+    color:#ffebee;
+}
+
+.ux-submit {
+    margin-top:10px;
+    text-align:left;
+}
+.ux-btn {
+    padding:9px 18px;
+    border:none;
+    border-radius:999px;
+    background:linear-gradient(135deg,#ff6a00,#ee0979);
+    color:#fff;
+    font-size:13px;
+    cursor:pointer;
+    box-shadow:0 16px 35px rgba(0,0,0,0.7);
+}
+.ux-btn.danger {
+    background:linear-gradient(135deg,#ff1744,#c51162);
+}
+
+.ux-help {
+    font-size:11px;
+    opacity:0.75;
+    margin-top:3px;
+}
+.ux-advanced-toggle {
+    font-size:12px;
+    margin-top:4px;
+}
+.ux-lang-switch{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:12px;
+    margin-top:4px;
+}
+.ux-lang-switch a{
+    color:#facc15;
+    text-decoration:none;
+    opacity:.7;
+}
+.ux-lang-switch a.active{
+    opacity:1;
+    font-weight:600;
+}
+.ux-lang-switch span{
+    color:rgba(148,163,184,0.7);
+}
+
+.ux-advanced {
+    display:none;
+}
+body.ux-show-advanced .ux-advanced {
+    display:block;
+}
+
+@media (max-width:768px){
+    .ux-main-card {padding:14px 12px 16px;}
+    .ux-header {flex-direction:column;align-items:flex-start;}
+    .ux-col-3, .ux-col-2 {flex:1 1 100%;}
+}
+        
+
+        /* ===== UX improvements: typography, live traffic block, auto-hide message ===== */
+        body {
+font-size:14px;
+line-height:1.7;
+        }
+        .ux-main-card {
+padding:20px 18px 24px;
+        }
+        .ux-pills {
+font-size:12px;
+        }
+        label {
+font-size:12px;
+        }
+        .text-sm {
+font-size:13px;
+        }
+        .text-xs {
+font-size:11px;
+        }
+
+        .ux-message {
+transition:opacity 0.35s ease, transform 0.35s ease;
+        }
+        .ux-message-hide {
+opacity:0;
+transform:translateY(-6px);
+pointer-events:none;
+        }
+
+        .ux-live-traffic {
+margin-bottom:18px;
+padding:14px 14px 12px;
+border-radius:20px;
+background:rgba(15,23,42,0.9);
+border:1px solid rgba(148,163,184,0.18);
+box-shadow:0 18px 40px rgba(15,23,42,0.65);
+        }
+        .ux-live-header {
+display:flex;
+flex-wrap:wrap;
+align-items:center;
+justify-content:space-between;
+gap:8px;
+margin-bottom:10px;
+        }
+        .ux-live-pill {
+display:inline-flex;
+align-items:center;
+padding:4px 12px;
+border-radius:999px;
+background:linear-gradient(135deg,#22c55e,#16a34a);
+font-size:12px;
+color:#ecfdf5;
+font-weight:600;
+box-shadow:0 0 0 1px rgba(22,163,74,0.45);
+        }
+        .ux-live-usage-label {
+font-size:12px;
+color:#9ca3af;
+        }
+        .ux-live-usage-label strong {
+color:#e5e7eb;
+font-weight:600;
+        }
+        .ux-live-grid {
+display:grid;
+grid-template-columns:repeat(3,minmax(0,1fr));
+gap:12px;
+        }
+        .ux-live-metric {
+padding:8px 10px;
+border-radius:16px;
+background:rgba(15,23,42,0.9);
+border:1px solid rgba(31,41,55,0.9);
+        }
+        .ux-live-metric-label {
+font-size:11px;
+color:#9ca3af;
+margin-bottom:4px;
+        }
+        .ux-live-metric-value {
+font-size:24px;
+font-weight:700;
+letter-spacing:0.03em;
+        }
+        .ux-live-metric-sub {
+margin-top:2px;
+font-size:11px;
+color:#9ca3af;
+        }
+        .ux-live-metric-wide {
+grid-column:1 / -1; /* full row (زیر هر سه ویجت) */
+        }
+        .ux-live-bar {
+position:relative;
+width:100%;
+height:8px;
+border-radius:999px;
+background:rgba(15,23,42,0.9);
+overflow:hidden;
+margin:6px 0 2px;
+        }
+        .ux-live-bar-fill {
+position:absolute;
+inset:0;
+width:0;
+border-radius:999px;
+background:linear-gradient(90deg,#22c55e,#eab308,#ef4444);
+transition:width .4s ease-out;
+        }
+        .ux-resource-bars {
+display:flex;
+flex-direction:column;
+gap:6px;
+margin-top:4px;
+        }
+        .ux-resource-row {
+display:flex;
+align-items:center;
+gap:8px;
+font-size:11px;
+color:#e5e7eb;
+        }
+        .ux-resource-label {
+width:40px;
+opacity:0.75;
+        }
+        .ux-resource-bar {
+flex:1;
+height:6px;
+border-radius:999px;
+background:rgba(15,23,42,0.9);
+overflow:hidden;
+        }
+        .ux-resource-fill {
+height:100%;
+width:0;
+border-radius:999px;
+background:linear-gradient(90deg,#22c55e,#eab308,#ef4444);
+transition:width .4s ease-out;
+        }
+        .ux-resource-value {
+width:40px;
+text-align:left;
+        }
+
+        .ux-bot-widget {
+margin-bottom:18px;
+padding:14px 14px 12px;
+border-radius:20px;
+background:rgba(15,23,42,0.9);
+border:1px solid rgba(148,163,184,0.18);
+        }
+        .ux-bot-widget-inline {
+margin-top:12px;
+margin-bottom:0;
+        }
+
+        .ux-bot-header {
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:8px;
+font-size:13px;
+color:#e5e7eb;
+        }
+        .ux-bot-pill {
+font-size:11px;
+border-radius:999px;
+padding:3px 10px;
+background:rgba(55,65,81,0.8);
+        }
+        .ux-bot-grid {
+display:grid;
+grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr);
+gap:12px;
+font-size:12px;
+color:#e5e7eb;
+        }
+        .ux-bot-list {
+list-style:none;
+padding:0;
+margin:0;
+max-height:220px;
+overflow-y:auto;
+scrollbar-width:thin;
+        }
+        .ux-bot-list li {
+margin-bottom:2px;
+        }
+
+        /* Summary and list for bot error analytics */
+        .ux-bot-error-summary {
+font-size:12px;
+color:#e5e7eb;
+margin-bottom:4px;
+        }
+        .ux-bot-error-list {
+list-style:none;
+padding:0;
+margin:0;
+max-height:120px;
+overflow-y:auto;
+scrollbar-width:thin;
+        }
+        .ux-bot-error-list li {
+font-size:10px;
+color:#f87171;
+margin-bottom:2px;
+        }
+
+        /* Summary and list for global (bot + human) error analytics */
+        .ux-all-error-summary {
+font-size:12px;
+color:#e5e7eb;
+margin-bottom:4px;
+        }
+        .ux-all-error-list {
+list-style:none;
+padding:0;
+margin:0;
+max-height:120px;
+overflow-y:auto;
+scrollbar-width:thin;
+        }
+        .ux-all-error-list li {
+font-size:10px;
+color:#fbbf24;
+margin-bottom:2px;
+        }
+
+        .ux-bot-row {
+display:flex;
+align-items:flex-start;
+gap:8px;
+        }
+        .ux-bot-row-text {
+flex:1;
+min-width:0;
+        }
+        .ux-bot-row-name {
+font-size:11px;
+color:#e5e7eb;
+font-weight:500;
+        }
+        .ux-bot-row-meta {
+font-size:10px;
+color:#9ca3af;
+margin-top:1px;
+        }
+
+        .ux-bot-icon {
+width:10px;
+height:10px;
+border-radius:999px;
+margin-top:3px;
+background:#6b7280;
+flex-shrink:0;
+        }
+        .ux-bot-icon-google {
+background:#22c55e;
+        }
+        .ux-bot-icon-bing {
+background:#3b82f6;
+        }
+        .ux-bot-icon-yandex {
+background:#ef4444;
+        }
+        .ux-bot-icon-baidu {
+background:#0ea5e9;
+        }
+        .ux-bot-icon-duck {
+background:#f97316;
+        }
+        .ux-bot-icon-other {
+background:#6b7280;
+        }
+
+        .ux-bot-health-good {
+color:#22c55e;
+        }
+        .ux-bot-health-warning {
+color:#eab308;
+        }
+        .ux-bot-health-bad {
+color:#ef4444;
+        }
+
+        .ux-bot-chart-wrap {
+grid-column:1 / -1;
+margin-top:10px;
+        }
+        .ux-bot-chart {
+width:100%;
+height:60px;
+        }
+        .ux-history-range {
+display:flex;
+gap:6px;
+margin-bottom:8px;
+flex-wrap:wrap;
+        }
+        .ux-history-btn {
+border:1px solid #e5e7eb;
+background:#f9fafb;
+border-radius:999px;
+padding:4px 10px;
+font-size:11px;
+cursor:pointer;
+        }
+        .ux-history-btn-active {
+background:#0ea5e9;
+border-color:#0ea5e9;
+color:#ffffff;
+        }
+        .ux-history-chart-wrapper {
+position:relative;
+min-height:140px;
+margin-top:4px;
+        }
+        .ux-history-chart-wrapper canvas {
+width:100%;
+height:240px;
+display:block;
+/* زمینه تیره برای هماهنگی با تم پنل */
+background:#0f172a;
+        }
+        .ux-history-chart-empty {
+position:absolute;
+inset:0;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:11px;
+color:#9ca3af;
+text-align:center;
+padding:4px;
+        }
+
+        /* پیام خالی برای کارت تصمیمات هوشمند - استایل جداگانه برای جلوگیری از هم‌پوشانی */
+        .ux-smart-decisions-empty-message {
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:11px;
+color:#9ca3af;
+padding:12px 0;
+        }
+        .ux-history-legend {
+margin-top:6px;
+font-size:11px;
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+color:#4b5563;
+        }
+        .ux-history-legend-item {
+display:inline-flex;
+align-items:center;
+gap:4px;
+        }
+        .ux-history-legend-cap {
+color:#22c55e;
+        }
+        .ux-history-legend-active {
+color:#2563eb;
+        }
+        .ux-history-legend-cpu {
+color:#dc2626;
+        }
+        .ux-history-legend-decisions {
+color:#facc15;
+        }
+
+        /* خلاصهٔ ظرفیت و کاربران برای نمودار صف هوشمند */
+        .ux-history-summary {
+margin-top:6px;
+font-size:11px;
+color:#4b5563;
+display:flex;
+flex-wrap:wrap;
+gap:15px;
+        }
+        .ux-history-summary strong {
+color:#e5e5e5;
+        }
+polyline {
+fill:none;
+stroke-width:1.4;
+        }
+        .ux-bot-chart-total {
+stroke:#f97316;
+opacity:0.9;
+        }
+        .ux-bot-chart-success {
+stroke:#22c55e;
+opacity:0.9;
+        }
+        .ux-bot-chart-axis {
+stroke:rgba(148,163,184,0.4);
+stroke-width:0.3;
+        }
+        .ux-bot-chart-legend {
+margin-top:6px;
+font-size:10px;
+color:#9ca3af;
+display:flex;
+gap:12px;
+        }
+        .ux-bot-legend-dot {
+display:inline-block;
+width:8px;
+height:8px;
+border-radius:999px;
+margin-left:4px;
+        }
+        .ux-bot-legend-total .ux-bot-legend-dot {
+background:#f97316;
+        }
+        .ux-bot-legend-success .ux-bot-legend-dot {
+background:#22c55e;
+        }
+.ux-bot-separator {
+margin-top:6px;
+padding-top:6px;
+border-top:1px dashed rgba(148,163,184,0.4);
+font-size:10px;
+color:#9ca3af;
+        }
+        .ux-bot-ip {
+direction:ltr;
+unicode-bidi:bidi-override;
+font-family:monospace;
+font-size:10px;
+color:#e5e7eb;
+        }
+        .ux-bot-ip-meta {
+font-size:10px;
+color:#9ca3af;
+margin-right:6px;
+        }
+
+
+        .ux-bot-modal-backdrop {
+position:fixed;
+inset:0;
+background:rgba(15,23,42,0.83);
+display:none;
+align-items:flex-start;
+justify-content:center;
+padding:80px 16px 24px;
+z-index:9999;
+        }
+        .ux-bot-modal {
+width:100%;
+max-width:780px;
+background:rgba(15,23,42,1);
+border-radius:18px;
+border:1px solid rgba(148,163,184,0.5);
+box-shadow:0 24px 60px rgba(15,23,42,0.95);
+padding:16px 18px 14px;
+        }
+        .ux-bot-modal-header {
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:8px;
+        }
+        .ux-bot-modal-title {
+font-size:14px;
+color:#e5e7eb;
+font-weight:600;
+        }
+        .ux-bot-modal-close {
+border:none;
+background:transparent;
+color:#9ca3af;
+cursor:pointer;
+font-size:18px;
+line-height:1;
+padding:0 4px;
+        }
+        .ux-bot-modal-close:hover {
+color:#e5e7eb;
+        }
+        .ux-bot-modal-summary {
+font-size:11px;
+color:#9ca3af;
+margin-bottom:8px;
+        }
+        .ux-bot-modal-summary strong {
+color:#e5e7eb;
+        }
+        .ux-bot-modal-list {
+max-height:260px;
+overflow:auto;
+border-radius:10px;
+border:1px solid rgba(30,64,175,0.4);
+background:rgba(15,23,42,0.9);
+        }
+        .ux-bot-modal-table {
+width:100%;
+border-collapse:collapse;
+font-size:11px;
+        }
+        .ux-bot-modal-table th,
+        .ux-bot-modal-table td {
+padding:6px 8px;
+border-bottom:1px solid rgba(31,41,55,0.9);
+        }
+        .ux-bot-modal-table th {
+position:sticky;
+top:0;
+background:rgba(15,23,42,0.98);
+color:#9ca3af;
+text-align:right;
+font-weight:500;
+        }
+        .ux-bot-modal-table td {
+color:#e5e7eb;
+        }
+        .ux-bot-modal-table td.ux-bot-modal-path {
+direction:ltr;
+unicode-bidi:bidi-override;
+font-family:monospace;
+font-size:10px;
+        }
+        .ux-bot-modal-table td.ux-bot-modal-ip {
+direction:ltr;
+unicode-bidi:bidi-override;
+font-family:monospace;
+font-size:10px;
+        }
+
+        /* Styles for error modal (lists of 4xx/5xx URLs) */
+        .ux-error-modal-backdrop {
+position:fixed;
+inset:0;
+background:rgba(15,23,42,0.83);
+display:none;
+align-items:flex-start;
+justify-content:center;
+padding:80px 16px 24px;
+z-index:9999;
+        }
+        .ux-error-modal {
+width:100%;
+max-width:780px;
+background:rgba(15,23,42,1);
+border-radius:18px;
+border:1px solid rgba(148,163,184,0.5);
+box-shadow:0 24px 60px rgba(15,23,42,0.95);
+padding:16px 18px 14px;
+        }
+        .ux-error-modal-header {
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:8px;
+        }
+        .ux-error-modal-title {
+font-size:14px;
+color:#e5e7eb;
+font-weight:600;
+        }
+        .ux-error-modal-close {
+border:none;
+background:transparent;
+color:#9ca3af;
+cursor:pointer;
+font-size:18px;
+line-height:1;
+padding:0 4px;
+        }
+        .ux-error-modal-close:hover {
+color:#e5e7eb;
+        }
+        .ux-error-modal-summary {
+font-size:11px;
+color:#9ca3af;
+margin-bottom:8px;
+        }
+        .ux-error-modal-summary strong {
+color:#e5e7eb;
+        }
+        .ux-error-modal-list {
+max-height:260px;
+overflow:auto;
+border-radius:10px;
+border:1px solid rgba(30,64,175,0.4);
+        }
+        .ux-error-modal-table {
+width:100%;
+border-collapse:collapse;
+font-size:11px;
+color:#e5e7eb;
+        }
+        .ux-error-modal-table th {
+text-align:left;
+padding:4px 8px;
+background:rgba(30,41,59,0.8);
+font-weight:600;
+        }
+        .ux-error-modal-table td {
+padding:4px 8px;
+border-top:1px solid rgba(30,64,175,0.4);
+        }
+        .ux-error-modal-path a {
+color:#60a5fa;
+text-decoration:none;
+        }
+        .ux-error-modal-path a:hover {
+text-decoration:underline;
+        }
+
+        .ux-error-modal-table td.ux-error-modal-path {
+direction:ltr;
+unicode-bidi:bidi-override;
+font-family:monospace;
+font-size:10px;
+        }
+
+
+
+
+        @media (max-width:900px) {
+.ux-live-grid {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+}
+.ux-live-metric-wide {
+    grid-column:span 2;
+}
+.ux-bot-grid {
+    grid-template-columns:minmax(0,1fr);
+}
+        }
+        @media (max-width:640px) {
+.ux-main-card {
+    padding:16px 12px 20px;
+}
+.ux-header {
+    flex-direction:column;
+    align-items:flex-start;
+}
+.ux-live-grid {
+    grid-template-columns:1fr;
+}
+.ux-live-metric-wide {
+    grid-column:span 1;
+}
+        }
+
+        
+/* ==== Live preview of campaign / waiting page ==== */
+.ux-preview-header {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    margin-bottom:6px;
+}
+.ux-preview-toolbar {
+    display:flex;
+    gap:6px;
+    margin-left:auto;
+}
+.ux-preview-device {
+    font-size:11px;
+    padding:4px 10px;
+    border-radius:999px;
+    border:0;
+    cursor:pointer;
+    background:rgba(255,255,255,0.06);
+    color:#e5e5f5;
+    outline:none;
+    transition:background 0.2s, transform 0.15s;
+    white-space:nowrap;
+}
+.ux-preview-device.is-active {
+    background:linear-gradient(90deg,#ff512f,#dd2476);
+    color:#ffffff;
+    transform:translateY(-1px);
+}
+.ux-preview-frame-wrap {
+    margin-top:6px;
+    border-radius:20px;
+    border:1px solid rgba(255,255,255,0.10);
+    padding:8px;
+    background:radial-gradient(120% 120% at 0% 0%, #151528 0, #050816 55%, #020010 100%);
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    overflow:hidden;
+    min-height:260px;
+}
+.ux-preview-frame-wrap.is-desktop {
+    max-width:100%;
+}
+.ux-preview-frame-wrap.is-mobile {
+    max-width:420px;
+    margin:0 auto;
+}
+.ux-preview-frame {
+    width:100%;
+    
+    border:0;
+    border-radius:16px;
+    background:#000000;
+    box-shadow:0 0 0 1px rgba(0,0,0,0.6);
+}
+.ux-preview-refresh-btn {
+    margin-top:8px;
+    font-size:11px;
+    padding:4px 10px;
+    border-radius:999px;
+    border:0;
+    cursor:pointer;
+    background:rgba(255,255,255,0.04);
+    color:#c9c9e6;
+}
+.ux-preview-refresh-btn:hover {
+    background:rgba(255,255,255,0.08);
+}
+
+/* Style for smart decisions table */
+table.ux-smart-decisions-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+}
+table.ux-smart-decisions-table th,
+table.ux-smart-decisions-table td {
+    padding: 4px 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 12px;
+}
+table.ux-smart-decisions-table th {
+    color: #cbd5e1;
+    text-align: right;
+    font-weight: 600;
+}
+table.ux-smart-decisions-table td {
+    color: #e2e8f0;
+    text-align: right;
+}
+table.ux-smart-decisions-table td.reason {
+    direction: rtl;
+}
+
+/* Ensure the smart decisions section doesn't grow indefinitely.
+   We wrap the table in a scrollable container by limiting its
+   maximum height and enabling vertical scrolling. Without this
+   rule the table continues to expand as new decisions arrive,
+   which makes the page layout break. */
+.ux-smart-decisions-section {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* custom styles for database size info in live metrics */
+.ux-db-info {
+    font-size: 11px;
+    opacity: 0.85;
+    margin-top: 4px;
+    line-height: 1.4;
+}
+.ux-db-info span {
+    display: block;
+}
+.ux-db-reset-btn {
+    padding: 4px 10px;
+    border: none;
+    border-radius: 999px;
+    font-size: 10px;
+    cursor: pointer;
+    color: #fff;
+    background: linear-gradient(135deg,#ff1744,#c51162);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.5);
+    margin-top: 6px;
+}
+.ux-db-reset-btn:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+/* Table to list blocked IP addresses */
+.ux-blocked-ip-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+}
+.ux-blocked-ip-table td {
+    padding: 4px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.ux-unblock-ip-btn {
+    padding: 3px 8px;
+    font-size: 10px;
+    border: none;
+    border-radius: 999px;
+    color: #fff;
+    background: linear-gradient(135deg,#00c853,#00bfa5);
+    cursor: pointer;
+}
+.ux-unblock-ip-btn:hover {
+    filter: brightness(1.1);
+}
+
+/*
+ * Vertical navigation styling for the settings sidebar. On larger screens
+ * (min-width:992px), the tabs container becomes a sticky sidebar. It
+ * floats to the right on RTL languages and to the left on LTR languages.
+ * The form content is offset with a margin to prevent overlap. On
+ * smaller screens, the original horizontal scroll behaviour of the
+ * tabs remains unchanged.
+ */
+@media (min-width: 992px) {
+    /* Layout container uses flexbox to position the sidebar and the content area */
+    .ux-settings-layout {
+        display: flex;
+        gap: 16px;
+    }
+    /* Flip the flex direction based on document direction */
+    [dir="rtl"] .ux-settings-layout {
+        flex-direction: row;
+    }
+    [dir="ltr"] .ux-settings-layout {
+        flex-direction: row;
+    }
+    /* Sidebar container */
+    .ux-settings-nav {
+        /* Increase sidebar width slightly to accommodate longer Persian labels */
+        width: 230px;
+        flex-shrink: 0;
+    }
+    /* Make the tabs container within the sidebar sticky */
+    .ux-settings-nav .ux-tabs-container {
+        position: sticky;
+        /* Reduce top offset so the sidebar appears closer to the top of the settings area */
+        top: 60px;
+        overflow-y: auto;
+        max-height: calc(100vh - 120px);
+    }
+    /* Arrange the tab links vertically */
+    .ux-settings-nav .ux-tabs {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    .ux-settings-nav .ux-tabs a {
+        display: block;
+        width: 100%;
+        white-space: nowrap;
+        padding: 8px 14px;
+        border-radius: 20px;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.15);
+        color: inherit;
+        font-size: 13px;
+        transition: background .2s, border-color .2s;
+    }
+    .ux-settings-nav .ux-tabs a.active {
+        background: var(--ux-primary, #4e7bfa);
+        border-color: var(--ux-primary, #4e7bfa);
+    }
+    .ux-settings-nav .ux-tabs a:hover {
+        background: rgba(255,255,255,0.15);
+    }
+    /* Content area grows to fill remaining space */
+    .ux-settings-content {
+        flex: 1 1 auto;
+    }
+}
+    /* ================================
+   SEO / Bots (Enterprise Grid UI)
+   ================================ */
+.seo-bots-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:16px;
+  align-items:start;
+}
+.seo-card{
+  border:1px solid var(--ux-border);
+  border-radius:12px;
+  padding:16px;
+  background:var(--ux-surface);
+}
+.seo-card.full-width{ grid-column:1 / -1; }
+.seo-card h3{
+  margin:0 0 12px 0;
+  font-size:14px;
+  font-weight:700;
+}
+.seo-card .ux-help{
+  margin-top:8px;
+  opacity:.85;
+  font-size:12px;
+  line-height:1.6;
+}
+.seo-table{
+  width:100%;
+  border-collapse:collapse;
+}
+.seo-table th, .seo-table td{
+  padding:8px 10px;
+  border-bottom:1px solid var(--ux-border);
+  vertical-align:top;
+}
+.seo-table th{ opacity:.9; font-weight:700; }
+
+/* Scrollable table wrapper (prevents long tables from breaking layout) */
+.ux-table-scroll{
+  overflow:auto;
+  max-height:420px;
+  border:1px solid var(--ux-border);
+  border-radius:12px;
+  background:rgba(2,6,23,0.22);
+}
+.ux-table-scroll table{ margin:0; }
+.ux-table-scroll thead th{
+  position:sticky;
+  top:0;
+  background:var(--ux-surface);
+  z-index:2;
+}
+
+.ux-chart-box{
+  border:1px solid var(--ux-border);
+  border-radius:12px;
+  padding:12px;
+  background:rgba(2,6,23,0.18);
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  /*
+    Chart.js uses ResizeObserver when `responsive:true`.
+    If the container height is not deterministic, some browsers can get into a
+    resize feedback-loop (chart grows, triggers resize, grows again...) when the
+    chart enters the viewport.
+
+    Make the chart box height deterministic to prevent the "infinite growing"
+    behaviour reported by users.
+  */
+  height:320px;
+  min-height:320px;
+  max-height:320px;
+}
+.ux-chart-title{
+  font-size:12px;
+  font-weight:700;
+  opacity:.9;
+}
+.ux-chart-box canvas{
+  flex:1 1 auto;
+  width:100%;
+  height:100%;
+  display:block;
+}
+
+/* Range sliders should be LTR even on RTL pages (prevents reversed behaviour) */
+.ux-range{
+  width:100%;
+  direction:ltr;
+}
+
+.seo-badge{
+  display:inline-block;
+  padding:2px 8px;
+  border-radius:999px;
+  border:1px solid var(--ux-border);
+  font-size:12px;
+  line-height:1.6;
+}
+.seo-badge.auto{ background:rgba(255,0,0,.08); }
+.seo-badge.manual{ background:rgba(0,255,0,.06); }
+.seo-badge.inactive{ opacity:.6; }
+.seo-toolbar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin:10px 0 0 0;
+}
+.seo-toolbar input[type="text"]{
+  width:min(520px, 100%);
+}
+@media (max-width: 980px){
+  .seo-bots-grid{ grid-template-columns:1fr; }
+  .seo-card.full-width{ grid-column:auto; }
+}
+
+
+/* ===========================
+   Redis Monitor (Pro UI)
+   =========================== */
+.ux-redis-monitor { padding: 0; }
+.ux-redis-monitor .ux-card-body { padding: 18px; }
+.ux-redis-toolbar {
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:14px;
+    flex-wrap:wrap;
+    padding-bottom:12px;
+    border-bottom: 1px solid rgba(255,255,255,0.10);
+    margin-bottom: 14px;
+}
+.ux-redis-titlegroup { min-width: 220px; }
+.ux-redis-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+.ux-redis-subtitle {
+    margin-top: 4px;
+    font-size: 12px;
+    color: #b7c3d0;
+    opacity: 0.95;
+}
+.ux-redis-actions {
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:10px;
+    flex-wrap:wrap;
+}
+.ux-redis-action { display:flex; flex-direction:column; gap:6px; }
+.ux-redis-action-label { font-size: 11px; color:#aab6c5; }
+.ux-redis-select {
+    min-width: 110px;
+    padding: 10px 12px;
+    height: 38px;
+    border-radius: 12px;
+    background: rgba(8,8,22,0.55);
+}
+.ux-redis-kpi-grid{
+    display:grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 12px;
+}
+.ux-span-12 { grid-column: span 12; }
+.ux-span-4  { grid-column: span 4; }
+.ux-span-3  { grid-column: span 3; }
+
+.ux-kpi-card{
+    background: rgba(10,10,26,0.55);
+    border: 1px solid rgba(148,163,184,0.18);
+    border-radius: 18px;
+    padding: 14px 14px 12px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.25);
+    overflow:hidden;
+    min-height: 92px;
+}
+.ux-kpi-label{
+    font-size: 12px;
+    color:#aab6c5;
+    opacity: 0.95;
+}
+.ux-kpi-value{
+    margin-top: 6px;
+    font-size: 24px;
+    font-weight: 750;
+    letter-spacing: 0.2px;
+}
+.ux-kpi-value-small{ font-size: 16px; font-weight: 650; line-height: 1.4; }
+.ux-kpi-sub{
+    margin-top: 8px;
+    font-size: 12px;
+    color: #93a4b6;
+}
+.ux-kpi-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+}
+.ux-kpi-pill{
+    display:inline-flex;
+    align-items:center;
+    gap: 8px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(148,163,184,0.12);
+    white-space: nowrap;
+}
+.ux-kpi-hero{ padding: 16px; background: rgba(12,12,28,0.62); }
+.ux-kpi-hero-grid{
+    margin-top: 12px;
+    display:grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 10px;
+}
+.ux-mini-kpi{
+    grid-column: span 3;
+    padding: 12px;
+    border-radius: 14px;
+    background: rgba(8,8,22,0.45);
+    border: 1px solid rgba(148,163,184,0.14);
+}
+.ux-mini-kpi-wide{ grid-column: span 6; }
+.ux-mini-label{ font-size: 11px; color:#aab6c5; opacity:0.95; }
+.ux-mini-value{
+    margin-top: 6px;
+    font-size: 20px;
+    font-weight: 750;
+}
+.ux-mini-value-small{
+    font-size: 12px;
+    font-weight: 600;
+    color:#cbd5e1;
+    line-height: 1.6;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.ux-mini-sub{
+    margin-top: 8px;
+    font-size: 11px;
+    color:#93a4b6;
+}
+.ux-kpi-foot{ margin-top: 10px; }
+.ux-kpi-foot .ux-help{ color:#9fb0c2; }
+
+.ux-redis-panels{
+    margin-top: 12px;
+    display:grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 12px;
+}
+.ux-panel-card{
+    background: rgba(10,10,26,0.55);
+    border: 1px solid rgba(148,163,184,0.18);
+    border-radius: 18px;
+    overflow:hidden;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.25);
+}
+.ux-panel-head{
+    padding: 14px 14px 10px;
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.10);
+}
+.ux-panel-title{ font-size: 13px; font-weight: 750; }
+.ux-panel-sub{ margin-top: 4px; font-size: 12px; color:#93a4b6; }
+.ux-panel-body{ padding: 12px 14px 14px; }
+.ux-panel-details summary{
+    list-style:none;
+    cursor:pointer;
+    padding: 14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.10);
+    user-select:none;
+}
+.ux-panel-details summary::-webkit-details-marker{ display:none; }
+.ux-panel-summary-sub{
+    font-size: 11px;
+    color:#93a4b6;
+    opacity:0.95;
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow: ellipsis;
+}
+.ux-diag-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.ux-diag-title{ font-size: 13px; font-weight: 750; }
+.ux-diag-meta{ font-size: 12px; color:#93a4b6; }
+.ux-table-wrap{ overflow:auto; border-radius: 14px; border: 1px solid rgba(148,163,184,0.14); }
+.ux-table{
+    width:100%;
+    border-collapse:collapse;
+    min-width: 520px;
+    font-size: 12px;
+}
+.ux-table thead th{
+    position: sticky;
+    top: 0;
+    background: rgba(8,8,22,0.85);
+    color:#cbd5e1;
+    text-align: start;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    white-space: nowrap;
+}
+.ux-table tbody td{
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    color:#e5e7eb;
+    white-space: nowrap;
+    text-align: start;
+}
+.ux-table tbody tr:nth-child(2n) td{ background: rgba(8,8,22,0.35); }
+.ux-table .is-danger{ color:#fca5a5; }
+
+
+.ux-chart-wrap{height:220px; position:relative;}
+.ux-chart-wrap canvas{width:100% !important; height:100% !important;}
+
+@media (max-width: 1100px){
+    .ux-span-3{ grid-column: span 4; }
+    .ux-redis-panels{ grid-template-columns: 1fr; }
+    .ux-mini-kpi{ grid-column: span 4; }
+    .ux-mini-kpi-wide{ grid-column: span 12; }
+}
+@media (max-width: 720px){
+    .ux-redis-toolbar{ align-items:flex-start; }
+    .ux-span-4, .ux-span-3{ grid-column: span 6; }
+    .ux-mini-kpi{ grid-column: span 6; }
+    .ux-mini-kpi-wide{ grid-column: span 12; }
+    .ux-kpi-card{ padding: 12px; }
+    .ux-kpi-value{ font-size: 22px; }
+}
+@media (max-width: 520px){
+    .ux-redis-monitor .ux-card-body{ padding: 14px; }
+    .ux-redis-actions{ width:100%; justify-content:space-between; }
+    .ux-span-4, .ux-span-3{ grid-column: span 12; }
+    .ux-mini-kpi{ grid-column: span 12; }
+    .ux-mini-value{ font-size: 18px; }
+    .ux-mini-value-small{ white-space: normal; overflow: visible; text-overflow: clip; }
+    .ux-panel-details summary{ flex-direction: column; align-items:flex-start; }
+    .ux-panel-summary-sub{ white-space: normal; overflow: visible; }
+    .ux-table{ min-width: 420px; }
+}
+

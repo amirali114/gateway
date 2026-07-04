@@ -1,0 +1,26 @@
+mother:
+  listen_addr: "127.0.0.1:8732"
+  mode: "dev"
+
+security:
+  agent_shared_secret: ""
+  require_signature: false
+  allow_remote_bind: false
+  signature_max_skew_seconds: 300
+
+debug:
+  enabled: false
+
+management:
+  enabled: true
+  write_enabled: false
+
+storage:
+  engine: "json"
+  path: "./data/mother"
+  sync_writes: true
+  backup_on_migration: true
+
+logging:
+  level: "info"
+  path: "./logs/unixsee-mother.log"

@@ -1,0 +1,7 @@
+# Unixsee Campaign Gateway R4.2
+# This legacy directory is reference-only and must not be web-accessible.
+Require all denied
+
+# Apache 2.2 / older LiteSpeed compatibility fallback
+Order allow,deny
+Deny from all

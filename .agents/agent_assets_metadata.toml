@@ -54,3 +54,9 @@ id = "Oi1bSifsuMmnIk3q3LdMT"
 uri = "file://exports/unixsee_campaign_gateway-r10.15-final-dashboard-qa.zip"
 type = "unspecified"
 title = "unixsee_campaign_gateway r10.15 (Final QA Pass)"
+
+[[outputs]]
+id = "7WLSC1ZMszF2Snwvqfnte"
+uri = "file://exports/unixsee_campaign_gateway-r10.16-mother-agent-product-surface.zip"
+type = "unspecified"
+title = "R10.16 — Mother + Agent Product Surface"

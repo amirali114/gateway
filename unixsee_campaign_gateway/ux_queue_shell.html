@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>کمپین بزرگ مارکوپوش</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="__UX_BASE__/assets/css/ux-fonts.css.php?v=1782481033">
+  <link rel="stylesheet" href="__UX_BASE__/ux_queue_shell.css?v=1782481033">
+</head>
+<body>
+  <main class="card">
+    <div class="brand">کنترل هوشمند ترافیک</div>
+    <h1>کمپین بزرگ مارکوپوش</h1>
+    <p>به‌دلیل استقبال زیاد، ورود موقتاً محدود شده تا تجربه خرید روان بماند.
+لطفاً چند دقیقه دیگر دوباره تلاش کنید.
+ممنون که همراه ما هستید</p>
+    <div class="media"><img src="__UX_BASE__/assets/uploads/media_20260206_170329_5356.webp" alt=""></div>
+    <div class="row">
+      <div class="pill"><span class="dot"></span><span id="uxStatus">در صف هستید…</span></div>
+      <button class="primary" id="uxCheckBtn">بررسی وضعیت ورود</button>
+    </div>
+    <div class="grid" aria-live="polite">
+      <div class="pill"><div><div class="k">جایگاه شما</div><div class="v" id="uxPos">—</div></div></div>
+      <div class="pill"><div><div class="k">تعداد در صف</div><div class="v" id="uxQCount">—</div></div></div>
+      <div class="pill"><div><div class="k">فعال‌ها</div><div class="v" id="uxActive">—</div></div></div>
+      <div class="pill"><div><div class="k">ظرفیت</div><div class="v" id="uxCap">—</div></div></div>
+    </div>
+    <div class="footer">Unixsee Campaign Gateway</div>
+  </main>
+  <script>
+  (function(){
+    const checkParam = "uxwr_check";
+    const btn = document.getElementById('uxCheckBtn');
+    const st = document.getElementById('uxStatus');
+    const pos = document.getElementById('uxPos');
+    const qc = document.getElementById('uxQCount');
+    const ac = document.getElementById('uxActive');
+    const cap = document.getElementById('uxCap');
+    let timer = null;
+    let backoff = 0;
+    function setStatus(t){ if(st) st.textContent = t; }
+    function setNum(el, v){ if(!el) return; el.textContent = (v===null||v===undefined||v==='') ? '—' : String(v); }
+    async function check(){
+      btn && (btn.disabled = true);
+      try{
+        const url = (location.search ? (location.search + '&') : '?') + encodeURIComponent(checkParam) + '=1&_=' + Date.now();
+        const res = await fetch(url, {credentials:'same-origin', headers:{'Accept':'application/json'}});
+        if(!res.ok){ throw new Error('HTTP '+res.status); }
+        const data = await res.json();
+        backoff = 0;
+        if(data && data.status === 'pass'){
+          setStatus('✅ نوبت شما رسید؛ در حال ورود…');
+          setTimeout(function(){ location.reload(); }, 300);
+          return;
+        }
+        setStatus('⏳ در صف هستید…');
+        setNum(pos, data.position);
+        setNum(qc, data.queue_count);
+        setNum(ac, data.active_count);
+        setNum(cap, data.capacity);
+        const poll = Math.max(8, Math.min(30, parseInt(data.poll_after || 12, 10) || 12));
+        timer = setTimeout(check, poll*1000);
+      } catch(e){
+        backoff = Math.min(60, backoff ? backoff*2 : 12);
+        setStatus('⚠️ خطا در بررسی؛ تلاش مجدد…');
+        timer = setTimeout(check, backoff*1000);
+      } finally {
+        btn && (btn.disabled = false);
+      }
+    }
+    btn && btn.addEventListener('click', function(ev){ ev.preventDefault(); if(timer){clearTimeout(timer);} check(); });
+    // start automatically
+    check();
+  })();
+  </script>
+</body>
+</html>

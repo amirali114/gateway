@@ -1,0 +1,20 @@
+{
+  "/(dashboard)/agents/[agent_id]/page": "app/(dashboard)/agents/[agent_id]/page.js",
+  "/(dashboard)/agents/page": "app/(dashboard)/agents/page.js",
+  "/(dashboard)/alerts/page": "app/(dashboard)/alerts/page.js",
+  "/(dashboard)/audit/page": "app/(dashboard)/audit/page.js",
+  "/(dashboard)/diagnostics/page": "app/(dashboard)/diagnostics/page.js",
+  "/(dashboard)/gateway/page": "app/(dashboard)/gateway/page.js",
+  "/(dashboard)/mother/page": "app/(dashboard)/mother/page.js",
+  "/(dashboard)/page": "app/(dashboard)/page.js",
+  "/(dashboard)/policy/page": "app/(dashboard)/policy/page.js",
+  "/(dashboard)/release/page": "app/(dashboard)/release/page.js",
+  "/(dashboard)/settings/page": "app/(dashboard)/settings/page.js",
+  "/(dashboard)/settings/production/page": "app/(dashboard)/settings/production/page.js",
+  "/(dashboard)/sync/page": "app/(dashboard)/sync/page.js",
+  "/(dashboard)/users/page": "app/(dashboard)/users/page.js",
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/login/page": "app/login/page.js",
+  "/logout/route": "app/logout/route.js"
+}

@@ -1,0 +1,23 @@
+[Unit]
+Description=Unixsee Mother/Core
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=unixsee
+Group=unixsee
+EnvironmentFile=-/etc/unixsee-gateway/mother.env
+ExecStartPre=/usr/bin/install -d -o unixsee -g unixsee -m 0750 /var/lib/unixsee-gateway/mother
+ExecStartPre=/usr/bin/install -d -o unixsee -g unixsee -m 0750 /var/log/unixsee-gateway
+ExecStart=/opt/unixsee-campaign-gateway/bin/unixsee-mother --config /etc/unixsee-gateway/mother.yml
+Restart=always
+RestartSec=2
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/var/lib/unixsee-gateway/mother /var/log/unixsee-gateway
+
+[Install]
+WantedBy=multi-user.target

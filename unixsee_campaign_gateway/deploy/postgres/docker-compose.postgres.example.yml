@@ -1,0 +1,20 @@
+# Example only. Do not commit real passwords. Bind to localhost/private network.
+services:
+  unixsee-postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: unixsee_gateway
+      POSTGRES_USER: unixsee_gateway
+      POSTGRES_PASSWORD: change-me-use-secret-manager
+    volumes:
+      - unixsee_pgdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U unixsee_gateway -d unixsee_gateway"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+volumes:
+  unixsee_pgdata:
