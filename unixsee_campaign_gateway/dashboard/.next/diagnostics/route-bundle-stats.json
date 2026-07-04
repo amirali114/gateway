@@ -55,6 +55,17 @@
     ]
   },
   {
+    "route": "/alerts/[alert_id]",
+    "firstLoadUncompressedJsBytes": 514418,
+    "firstLoadChunkPaths": [
+      ".next/static/chunks/37crtsb-_a99y.js",
+      ".next/static/chunks/3cjbt3ge70pyu.js",
+      ".next/static/chunks/0t3q0wpww7vpf.js",
+      ".next/static/chunks/0vigjt9r1-qau.js",
+      ".next/static/chunks/turbopack-1ddu7ddyv-ykg.js"
+    ]
+  },
+  {
     "route": "/audit",
     "firstLoadUncompressedJsBytes": 514418,
     "firstLoadChunkPaths": [

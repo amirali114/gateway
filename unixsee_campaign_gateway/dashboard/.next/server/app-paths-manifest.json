@@ -1,6 +1,7 @@
 {
   "/(dashboard)/agents/[agent_id]/page": "app/(dashboard)/agents/[agent_id]/page.js",
   "/(dashboard)/agents/page": "app/(dashboard)/agents/page.js",
+  "/(dashboard)/alerts/[alert_id]/page": "app/(dashboard)/alerts/[alert_id]/page.js",
   "/(dashboard)/alerts/page": "app/(dashboard)/alerts/page.js",
   "/(dashboard)/audit/page": "app/(dashboard)/audit/page.js",
   "/(dashboard)/diagnostics/page": "app/(dashboard)/diagnostics/page.js",

@@ -1,6 +1,7 @@
 {
   "/(dashboard)/agents/[agent_id]/page": "/agents/[agent_id]",
   "/(dashboard)/agents/page": "/agents",
+  "/(dashboard)/alerts/[alert_id]/page": "/alerts/[alert_id]",
   "/(dashboard)/alerts/page": "/alerts",
   "/(dashboard)/audit/page": "/audit",
   "/(dashboard)/diagnostics/page": "/diagnostics",

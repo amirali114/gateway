@@ -12,3 +12,9 @@ id = "791nThpO5-Zk-D2vetexu"
 uri = "file://unixsee_campaign_gateway-r10.18-function-integration-audit-fixed.zip"
 type = "unspecified"
 title = "R10.18 Audit ZIP — corrected packaging"
+
+[[outputs]]
+id = "Iwgm2DhdDEEjBk2e1cLMS"
+uri = "file://unixsee_campaign_gateway-r10.19-alert-detail-readonly.zip"
+type = "unspecified"
+title = "R10.19 Alert Detail Read-Only ZIP"

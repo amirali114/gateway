@@ -1,0 +1,3 @@
+{
+  "/(dashboard)/alerts/[alert_id]/page": "app/(dashboard)/alerts/[alert_id]/page.js"
+}

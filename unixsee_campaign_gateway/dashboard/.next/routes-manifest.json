@@ -52,6 +52,14 @@
         "nxtPagent_id": "nxtPagent_id"
       },
       "namedRegex": "^/agents/(?<nxtPagent_id>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/alerts/[alert_id]",
+      "regex": "^/alerts/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPalert_id": "nxtPalert_id"
+      },
+      "namedRegex": "^/alerts/(?<nxtPalert_id>[^/]+?)(?:/)?$"
     }
   ],
   "staticRoutes": [
