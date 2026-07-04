@@ -36,3 +36,9 @@ id = "C3__35SFBEI-zxWECfmhe"
 uri = "file://exports/unixsee_campaign_gateway-r10.12-gateway-policy-alerts-ui-polish.zip"
 type = "unspecified"
 title = "unixsee_campaign_gateway r10.12 (Gateway, Policy & Alerts UI polish)"
+
+[[outputs]]
+id = "qlKz8kDfJVuN29ROjLug9"
+uri = "file://exports/unixsee_campaign_gateway-r10.13-users-audit-settings-ui-polish.zip"
+type = "unspecified"
+title = "unixsee_campaign_gateway r10.13 (Users, Audit & Settings UI polish)"
