@@ -48,3 +48,9 @@ id = "F9Za1A0O0qi8v9zhWdPp9"
 uri = "file://exports/unixsee_campaign_gateway-r10.14-sync-login-final-ui-polish.zip"
 type = "unspecified"
 title = "unixsee_campaign_gateway r10.14 (Sync, Login & Final Consistency Pass)"
+
+[[outputs]]
+id = "Oi1bSifsuMmnIk3q3LdMT"
+uri = "file://exports/unixsee_campaign_gateway-r10.15-final-dashboard-qa.zip"
+type = "unspecified"
+title = "unixsee_campaign_gateway r10.15 (Final QA Pass)"
