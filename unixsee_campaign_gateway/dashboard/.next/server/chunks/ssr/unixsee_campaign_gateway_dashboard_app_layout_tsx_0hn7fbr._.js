@@ -1,0 +1,3 @@
+module.exports=[78562,a=>{"use strict";var b=a.i(2797);a.s(["default",0,function({children:a}){return(0,b.jsx)("html",{lang:"en",dir:"ltr",children:(0,b.jsx)("body",{children:a})})},"metadata",0,{title:"Unixsee Gateway Control",description:"Mother-backed controlled beta dashboard for Unixsee Campaign Gateway."}])},42911,a=>{a.n(a.i(78562))}];
+
+//# sourceMappingURL=unixsee_campaign_gateway_dashboard_app_layout_tsx_0hn7fbr._.js.map

@@ -1,0 +1,20 @@
+{
+  "/(dashboard)/agents/[agent_id]/page": "/agents/[agent_id]",
+  "/(dashboard)/agents/page": "/agents",
+  "/(dashboard)/alerts/page": "/alerts",
+  "/(dashboard)/audit/page": "/audit",
+  "/(dashboard)/diagnostics/page": "/diagnostics",
+  "/(dashboard)/gateway/page": "/gateway",
+  "/(dashboard)/mother/page": "/mother",
+  "/(dashboard)/page": "/",
+  "/(dashboard)/policy/page": "/policy",
+  "/(dashboard)/release/page": "/release",
+  "/(dashboard)/settings/page": "/settings",
+  "/(dashboard)/settings/production/page": "/settings/production",
+  "/(dashboard)/sync/page": "/sync",
+  "/(dashboard)/users/page": "/users",
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/login/page": "/login",
+  "/logout/route": "/logout"
+}
