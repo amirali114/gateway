@@ -6,3 +6,9 @@ id = "SczHI2lMvGmyQOt_-OGKz"
 uri = "file://r10.6-ui-patch.tar.gz"
 type = "unspecified"
 title = "r10.6-ui-patch — Next.js App Router UI Layer"
+
+[[outputs]]
+id = "P1ROX1Bwi51f_wiAKWfrL"
+uri = "file://exports/unixsee_campaign_gateway-r10.8-overview-polish.zip"
+type = "unspecified"
+title = "unixsee_campaign_gateway-r10.8-overview-polish.zip"
