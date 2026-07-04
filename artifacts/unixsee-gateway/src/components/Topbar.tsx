@@ -27,8 +27,8 @@ export function Topbar({ title, subtitle, alertCount = 0, actions }: TopbarProps
 
       <div className="hidden md:flex items-center gap-2 bg-muted/50 border border-border rounded-md px-3 py-1.5 text-xs text-muted-foreground w-52">
         <Search className="w-3.5 h-3.5 shrink-0" />
-        <span>جستجو…</span>
-        <span className="ltr text-[10px] bg-border/60 px-1.5 py-0.5 rounded mr-auto">⌘K</span>
+        <span>Search…</span>
+        <span className="text-[10px] bg-border/60 px-1.5 py-0.5 rounded ml-auto">⌘K</span>
       </div>
 
       {actions && <div className="flex items-center gap-2">{actions}</div>}
@@ -36,7 +36,7 @@ export function Topbar({ title, subtitle, alertCount = 0, actions }: TopbarProps
       <button
         onClick={handleRefresh}
         className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-        title="بروزرسانی"
+        title="Refresh"
       >
         <RefreshCw className={cn("w-4 h-4", refreshing && "animate-spin")} />
       </button>
@@ -47,11 +47,11 @@ export function Topbar({ title, subtitle, alertCount = 0, actions }: TopbarProps
       >
         <Bell className="w-4 h-4" />
         {alertCount > 0 && (
-          <span className="absolute top-1 left-1 w-2 h-2 bg-red-500 rounded-full" />
+          <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
         )}
       </Link>
 
-      <div className="ltr text-[10px] px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono font-medium">
+      <div className="text-[10px] px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono font-medium">
         PROD
       </div>
     </header>

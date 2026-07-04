@@ -8,7 +8,7 @@ interface RawJsonDrawerProps {
   defaultOpen?: boolean;
 }
 
-export function RawJsonDrawer({ data, label = "داده خام JSON", defaultOpen = false }: RawJsonDrawerProps) {
+export function RawJsonDrawer({ data, label = "Raw JSON", defaultOpen = false }: RawJsonDrawerProps) {
   const [open, setOpen] = useState(defaultOpen);
   const [copied, setCopied] = useState(false);
 
@@ -37,7 +37,7 @@ export function RawJsonDrawer({ data, label = "داده خام JSON", defaultOpe
           <button
             onClick={handleCopy}
             className="absolute top-2 left-2 p-1.5 rounded bg-border/40 hover:bg-border/80 transition-colors z-10"
-            title="کپی"
+            title="Copy"
           >
             {copied
               ? <Check className="w-3 h-3 text-emerald-400" />
