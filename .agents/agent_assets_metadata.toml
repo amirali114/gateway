@@ -24,3 +24,9 @@ id = "sujpGN_8vXzzAHlTjAaP2"
 uri = "file://exports/unixsee_campaign_gateway-r10.10-release-production-ui-polish.zip"
 type = "unspecified"
 title = "unixsee_campaign_gateway-r10.10-release-production-ui-polish.zip"
+
+[[outputs]]
+id = "NuH8SuuHshHZfTfoxm5er"
+uri = "file://exports/unixsee_campaign_gateway-r10.11-mother-diagnostics-ui-polish.zip"
+type = "unspecified"
+title = "unixsee_campaign_gateway r10.11 (Mother & Diagnostics UI polish)"
