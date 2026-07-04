@@ -42,3 +42,9 @@ id = "qlKz8kDfJVuN29ROjLug9"
 uri = "file://exports/unixsee_campaign_gateway-r10.13-users-audit-settings-ui-polish.zip"
 type = "unspecified"
 title = "unixsee_campaign_gateway r10.13 (Users, Audit & Settings UI polish)"
+
+[[outputs]]
+id = "F9Za1A0O0qi8v9zhWdPp9"
+uri = "file://exports/unixsee_campaign_gateway-r10.14-sync-login-final-ui-polish.zip"
+type = "unspecified"
+title = "unixsee_campaign_gateway r10.14 (Sync, Login & Final Consistency Pass)"
