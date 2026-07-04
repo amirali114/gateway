@@ -12,3 +12,9 @@ id = "P1ROX1Bwi51f_wiAKWfrL"
 uri = "file://exports/unixsee_campaign_gateway-r10.8-overview-polish.zip"
 type = "unspecified"
 title = "unixsee_campaign_gateway-r10.8-overview-polish.zip"
+
+[[outputs]]
+id = "TFAmUkO-VDVCu7aYng_qM"
+uri = "file://exports/unixsee_campaign_gateway-r10.9-agents-ui-polish.zip"
+type = "unspecified"
+title = "unixsee_campaign_gateway-r10.9-agents-ui-polish.zip"
