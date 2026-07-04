@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "SxQRoCuYz_RBi90N61gbW"
+uri = "file://unixsee_campaign_gateway-r10.18-function-integration-audit.zip"
+type = "unspecified"
+title = "R10.18 Function/Integration Audit ZIP"
