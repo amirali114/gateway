@@ -6,3 +6,9 @@ id = "x2ujnLjx1XnLgOde-aN-2"
 uri = "file://.local/release/unixsee-gateway-dashboard.zip"
 type = "unspecified"
 title = "Unixsee Gateway Dashboard — Canonical Source Release"
+
+[[outputs]]
+id = "dezpudshyWCj8ANxmiSzq"
+uri = "file://.local/release/unixsee_campaign_gateway-r10.26-final-action-surface-qa.zip"
+type = "unspecified"
+title = "R10.26 Final Action-Surface QA Release"

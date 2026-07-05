@@ -1,0 +1,65 @@
+Rejected. This ZIP is not acceptable as a release artifact.
+
+It regressed R10.26 safety fixes and appears to be the preview artifact copy, not the canonical release source.
+
+Required correction:
+
+1. Canonical source of truth must remain:
+unixsee_campaign_gateway/dashboard
+
+2. Final release ZIP must contain:
+unixsee_campaign_gateway/dashboard/...
+RELEASE_NOTES_R10_26.md
+
+3. artifacts/gateway-dashboard is preview-only.
+Do not generate the release ZIP from artifacts/.
+
+4. Restore R10.26 safety fixes exactly:
+- alert resolve requires confirmation
+- alert mute requires confirmation
+- alert unmute requires confirmation
+- unmute must not be an immediate form action on the alert detail page
+- alert confirm page must support action=resolve, action=mute, and action=unmute
+- each server action must call requirePermission("alerts.manage") inside the action
+- each success/failure must append audit events
+- redirect query statuses must be sanitized/whitelisted only
+- no raw query error text should be rendered
+
+5. ConfigEditor.tsx must be fail-closed:
+- no action prop
+- no submit action
+- no Save draft submit
+- hidden agent_id disabled or non-submittable
+- button must be type="button" and disabled
+- draft write/edit UI must not be reachable
+
+6. lib/api.ts must remain server-only:
+- import "server-only"
+- Mother base URL must only use UNIXSEE_MOTHER_BASE_URL
+- do NOT use NEXT_PUBLIC_UNIXSEE_MOTHER_BASE_URL
+- browser must never fetch Mother directly
+- Mother token must never be exposed
+
+7. Keep Replit-only runtime changes only in the preview copy if needed:
+- 0.0.0.0:$PORT binding
+- iframe/dev origin settings
+- writable user-store path
+- public base URL
+- test credentials
+
+8. Do not commit test password admin/TestPass123! into canonical release source.
+
+9. Run build from:
+cd unixsee_campaign_gateway/dashboard
+npm run build
+
+10. Output a corrected release ZIP named:
+unixsee_campaign_gateway-r10.26-final-action-surface-qa.zip
+
+11. Report:
+- changed files in unixsee_campaign_gateway/dashboard
+- changed files in artifacts/gateway-dashboard
+- build status
+- confirmation no Vite/Express remains
+- confirmation no secrets/test passwords are committed
+- confirmation final ZIP was generated from unixsee_campaign_gateway/dashboard only

@@ -14,18 +14,18 @@ function stringFromConfig(config: UnknownRecord, group: string, key: string, fal
   return fallback;
 }
 
-export function ConfigEditor({ agentId, activeConfig, action, disabled = true }: { agentId: string; activeConfig: UnknownRecord; action: (formData: FormData) => Promise<void>; disabled?: boolean }) {
+export function ConfigEditor({ agentId, activeConfig }: { agentId: string; activeConfig: UnknownRecord }) {
   return (
-    <form action={action} className="stack-form">
-      <input type="hidden" name="agent_id" value={agentId} />
-      <div className="notice"><b>Shadow-only mode is locked.</b> Draft writes remain disabled in this visual release unless existing RBAC and safe APIs explicitly allow them.</div>
+    <div className="stack-form">
+      <input type="hidden" name="agent_id" value={agentId} disabled />
+      <div className="notice"><b>Shadow-only mode is locked.</b> Draft writes are disabled in this release. This view is read-only and cannot submit changes.</div>
       <div className="grid two">
-        <label><span>Gateway enabled</span><input type="checkbox" name="gateway_enabled" disabled={disabled} defaultChecked={boolFromConfig(activeConfig, "gateway", "enabled", true)} /></label>
-        <label><span>Campaign enabled</span><input type="checkbox" name="campaign_enabled" disabled={disabled} defaultChecked={boolFromConfig(activeConfig, "campaign", "enabled", true)} /></label>
-        <label><span>Default action</span><select name="default_action" disabled={disabled} defaultValue={stringFromConfig(activeConfig, "gateway", "default_action", "allow")}><option value="allow">allow</option><option value="pass">pass</option></select></label>
-        <label><span>Storage fail mode</span><select name="storage_fail_mode" disabled={disabled} defaultValue={stringFromConfig(activeConfig, "storage", "fail_mode", "open")}><option value="open">open</option><option value="closed">closed</option></select></label>
+        <label><span>Gateway enabled</span><input type="checkbox" disabled defaultChecked={boolFromConfig(activeConfig, "gateway", "enabled", true)} /></label>
+        <label><span>Campaign enabled</span><input type="checkbox" disabled defaultChecked={boolFromConfig(activeConfig, "campaign", "enabled", true)} /></label>
+        <label><span>Default action</span><select disabled defaultValue={stringFromConfig(activeConfig, "gateway", "default_action", "allow")}><option value="allow">allow</option><option value="pass">pass</option></select></label>
+        <label><span>Storage fail mode</span><select disabled defaultValue={stringFromConfig(activeConfig, "storage", "fail_mode", "open")}><option value="open">open</option><option value="closed">closed</option></select></label>
       </div>
-      <button type="submit" disabled={disabled}>Save draft</button>
-    </form>
+      <button type="button" disabled>Save draft</button>
+    </div>
   );
 }

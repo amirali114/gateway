@@ -1,14 +1,11 @@
-import { redirect } from "next/navigation";
 import { PageHeader } from "../../../../components/PageHeader";
 import { RawJsonDrawer } from "../../../../components/RawJsonDrawer";
 import { SectionCard } from "../../../../components/SectionCard";
 import { StatusPill } from "../../../../components/StatusPill";
 import type { PillTone } from "../../../../components/StatusPill";
 import { ErrorState } from "../../../../components/ErrorState";
-import { getMotherAlert, read, valueOrDash, unmuteMotherAlert } from "../../../../lib/api";
-import { requirePermission, hasPermission, motherActorHeaders, type AuthStatus } from "../../../../lib/auth";
-import { appendAudit } from "../../../../lib/user-store";
-import { type Role } from "../../../../lib/rbac";
+import { getMotherAlert, read, valueOrDash } from "../../../../lib/api";
+import { requirePermission, hasPermission } from "../../../../lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -37,11 +34,6 @@ function heroBadgeTone(severity: string | undefined): "danger" | "warning" | "su
   return "";
 }
 
-function auditActor(auth: AuthStatus) {
-  if (auth.role === "auth-disabled") return undefined;
-  return { id: auth.user_id, username: auth.username, role: auth.role as Role };
-}
-
 export default async function AlertDetailPage({ params, searchParams }: Params) {
   const { alert_id } = await params;
   const alertId = decodeURIComponent(alert_id);
@@ -49,28 +41,10 @@ export default async function AlertDetailPage({ params, searchParams }: Params) 
   const canManage = hasPermission(auth, "alerts.manage");
   const sp = searchParams ? await searchParams : {};
 
-  async function unmuteAlertAction(formData: FormData) {
-    "use server";
-    const a = await requirePermission("alerts.manage");
-    const id = String(formData.get("alert_id") || "").trim();
-    const actor = auditActor(a);
-    if (!id) {
-      await appendAudit({ actor, action: "alert.unmute", target_type: "alert", target_id: "(empty)", result: "failure", metadata: { error: "missing_alert_id" } });
-      redirect("/alerts?error=missing_alert_id");
-      return;
-    }
-    const result = await unmuteMotherAlert(id, motherActorHeaders(a));
-    if (!result.ok) {
-      await appendAudit({ actor, action: "alert.unmute", target_type: "alert", target_id: id, result: "failure", metadata: { mother_status: result.status } });
-      redirect(`/alerts/${encodeURIComponent(id)}?error=unmute_failed`);
-      return;
-    }
-    await appendAudit({ actor, action: "alert.unmute", target_type: "alert", target_id: id, result: "success", metadata: { mother_status: result.status } });
-    redirect(`/alerts/${encodeURIComponent(id)}?ok=unmuted`);
-  }
-
   const KNOWN_OK = new Set(["resolved", "muted", "unmuted"]);
+  const KNOWN_ERROR = new Set(["missing_alert_id", "resolve_failed", "mute_failed", "unmute_failed"]);
   const safeOk = sp.ok && KNOWN_OK.has(sp.ok) ? sp.ok : null;
+  const safeError = sp.error && KNOWN_ERROR.has(sp.error) ? sp.error : null;
 
   const alertResult = await getMotherAlert(alertId);
   const alert = read(alertResult)?.alert;
@@ -87,7 +61,7 @@ export default async function AlertDetailPage({ params, searchParams }: Params) 
           actions={<a className="button-link button-secondary" href="/alerts">Back to alerts</a>}
           meta={<StatusPill tone="danger">Unavailable</StatusPill>}
         />
-        {sp.error ? <ErrorState title="Last action failed" error={sp.error} /> : null}
+        {safeError ? <ErrorState title="Last action failed" error={safeError} /> : null}
         <div className="section-block">
           <SectionCard title="Alert unavailable" description="Mother could not return data for this alert ID.">
             <ErrorState error={unavailableError ?? undefined} />
@@ -127,7 +101,7 @@ export default async function AlertDetailPage({ params, searchParams }: Params) 
       {canManage ? (
         <div className="readonly-banner" style={{ borderColor: "var(--warn, #e0a800)", background: "var(--warn-bg, #fffbe6)" }}>
           <span>◈</span>
-          <span><b>Management actions enabled.</b> Resolve and mute require confirmation on the next page. Unmute is immediate. Every action is server-side and recorded in the audit trail.</span>
+          <span><b>Management actions enabled.</b> Resolve, mute, and unmute all require confirmation on the next page. Every action is server-side and recorded in the audit trail.</span>
         </div>
       ) : (
         <div className="readonly-banner">
@@ -139,8 +113,8 @@ export default async function AlertDetailPage({ params, searchParams }: Params) 
       {safeOk ? (
         <div className="notice">Action completed: <b>{safeOk}</b>. Alert state has been updated in Mother.</div>
       ) : null}
-      {sp.error ? (
-        <ErrorState title="Action failed" error={sp.error} />
+      {safeError ? (
+        <ErrorState title="Action failed" error={safeError} />
       ) : null}
 
       <div className="hero-panel">
@@ -263,12 +237,14 @@ export default async function AlertDetailPage({ params, searchParams }: Params) 
             <div className="checklist-card">
               <span className="checklist-card-icon">◈</span>
               <span className="checklist-card-text">
-                <b>Unmute</b> — restores notifications for a muted alert. No confirmation required.
+                <b>Unmute</b> — restores notifications for a muted alert.
                 {" "}
-                <form action={unmuteAlertAction} style={{ display: "inline" }}>
-                  <input type="hidden" name="alert_id" value={alertId} />
-                  <button type="submit" className="button-link button-secondary">Unmute this alert</button>
-                </form>
+                <a
+                  className="button-link button-secondary"
+                  href={`/alerts/${encodeURIComponent(alertId)}/confirm?action=unmute`}
+                >
+                  Unmute this alert →
+                </a>
               </span>
             </div>
           </div>
@@ -283,7 +259,7 @@ export default async function AlertDetailPage({ params, searchParams }: Params) 
           {canManage ? (
             <>
               <div className="checklist-card"><span className="checklist-card-icon">✓</span><span className="checklist-card-text">Every management action runs server-side and requires alerts.manage permission, checked inside the server action — not only at page load.</span></div>
-              <div className="checklist-card"><span className="checklist-card-icon">✓</span><span className="checklist-card-text">Resolve and mute require a separate confirmation step. Unmute is immediate but still server-side and permission-gated.</span></div>
+              <div className="checklist-card"><span className="checklist-card-icon">✓</span><span className="checklist-card-text">Resolve, mute, and unmute each require a separate confirmation step before executing.</span></div>
               <div className="checklist-card"><span className="checklist-card-icon">✓</span><span className="checklist-card-text">Every action — including failures — is appended to the audit trail with actor, action, alert ID, and timestamp.</span></div>
             </>
           ) : (

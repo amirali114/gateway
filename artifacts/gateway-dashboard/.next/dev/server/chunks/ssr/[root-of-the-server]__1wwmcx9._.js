@@ -447,7 +447,7 @@ __turbopack_context__.s([
 ]);
 ;
 const DEFAULT_TIMEOUT_MS = 2200;
-const rawMotherBaseUrl = process.env.UNIXSEE_MOTHER_BASE_URL || process.env.NEXT_PUBLIC_UNIXSEE_MOTHER_BASE_URL || "http://127.0.0.1:8732";
+const rawMotherBaseUrl = process.env.UNIXSEE_MOTHER_BASE_URL || "http://127.0.0.1:8732";
 const motherBaseUrl = normalizeBaseUrl(rawMotherBaseUrl);
 function normalizeBaseUrl(value) {
     return value.trim().replace(/\/+$/, "");

@@ -4,7 +4,7 @@ import { SectionCard } from "../../../../../components/SectionCard";
 import { StatusPill } from "../../../../../components/StatusPill";
 import type { PillTone } from "../../../../../components/StatusPill";
 import { ErrorState } from "../../../../../components/ErrorState";
-import { getMotherAlert, read, valueOrDash, resolveMotherAlert, muteMotherAlert } from "../../../../../lib/api";
+import { getMotherAlert, read, valueOrDash, resolveMotherAlert, muteMotherAlert, unmuteMotherAlert } from "../../../../../lib/api";
 import { requirePermission, motherActorHeaders, type AuthStatus } from "../../../../../lib/auth";
 import { appendAudit } from "../../../../../lib/user-store";
 import { type Role } from "../../../../../lib/rbac";
@@ -41,11 +41,11 @@ export default async function AlertConfirmPage({ params, searchParams }: Params)
   const sp = searchParams ? await searchParams : {};
   const action = sp.action;
 
-  if (action !== "resolve" && action !== "mute") {
+  if (action !== "resolve" && action !== "mute" && action !== "unmute") {
     redirect(`/alerts/${encodeURIComponent(alertId)}`);
   }
 
-  const safeAction: "resolve" | "mute" = action;
+  const safeAction: "resolve" | "mute" | "unmute" = action;
 
   async function confirmResolveAction(formData: FormData) {
     "use server";
@@ -87,14 +87,36 @@ export default async function AlertConfirmPage({ params, searchParams }: Params)
     redirect(`/alerts/${encodeURIComponent(id)}?ok=muted`);
   }
 
+  async function confirmUnmuteAction(formData: FormData) {
+    "use server";
+    const a = await requirePermission("alerts.manage");
+    const id = String(formData.get("alert_id") || "").trim();
+    const actor = auditActor(a);
+    if (!id) {
+      await appendAudit({ actor, action: "alert.unmute", target_type: "alert", target_id: "(empty)", result: "failure", metadata: { error: "missing_alert_id" } });
+      redirect("/alerts?error=missing_alert_id");
+      return;
+    }
+    const result = await unmuteMotherAlert(id, motherActorHeaders(a));
+    if (!result.ok) {
+      await appendAudit({ actor, action: "alert.unmute", target_type: "alert", target_id: id, result: "failure", metadata: { mother_status: result.status } });
+      redirect(`/alerts/${encodeURIComponent(id)}?error=unmute_failed`);
+      return;
+    }
+    await appendAudit({ actor, action: "alert.unmute", target_type: "alert", target_id: id, result: "success", metadata: { mother_status: result.status } });
+    redirect(`/alerts/${encodeURIComponent(id)}?ok=unmuted`);
+  }
+
   const alertResult = await getMotherAlert(alertId);
   const alert = read(alertResult)?.alert;
 
-  const actionLabel = safeAction === "resolve" ? "Resolve" : "Mute";
+  const actionLabel = safeAction === "resolve" ? "Resolve" : safeAction === "mute" ? "Mute" : "Unmute";
   const actionDesc = safeAction === "resolve"
     ? "Marking an alert as resolved signals to Mother that the underlying issue has been addressed. This action is recorded in the audit trail."
-    : "Muting an alert suppresses its notifications. The alert remains visible in the list. This action is recorded in the audit trail.";
-  const confirmAction = safeAction === "resolve" ? confirmResolveAction : confirmMuteAction;
+    : safeAction === "mute"
+    ? "Muting an alert suppresses its notifications. The alert remains visible in the list. This action is recorded in the audit trail."
+    : "Unmuting an alert restores its notifications. This action is recorded in the audit trail.";
+  const confirmAction = safeAction === "resolve" ? confirmResolveAction : safeAction === "mute" ? confirmMuteAction : confirmUnmuteAction;
 
   return (
     <>
