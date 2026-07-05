@@ -24,3 +24,9 @@ id = "yie-Bw3we9_SWOY9NH98Z"
 uri = "file://.local/release/unixsee_campaign_gateway-r10.27-gateway-page-null-safety.zip"
 type = "unspecified"
 title = "R10.27 Gateway Page Null-Safety Fix"
+
+[[outputs]]
+id = "cez9JdHcS5CAD_bjw3dJx"
+uri = "file://.local/release/unixsee_campaign_gateway-r10.28-live-data-agent-registration-verification.zip"
+type = "unspecified"
+title = "R10.28 Live Data / Agent Registration Verification (Audit)"

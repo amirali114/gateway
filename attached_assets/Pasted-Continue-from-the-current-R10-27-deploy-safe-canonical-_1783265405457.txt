@@ -1,0 +1,126 @@
+Continue from the current R10.27 deploy-safe canonical package.
+
+Do not reset the project.
+Do not go back to older ZIPs.
+Use R10.27 as baseline.
+
+Create:
+unixsee_campaign_gateway-r10.28-live-data-agent-registration-verification.zip
+
+Goal:
+Verify why the Dashboard shows no registered agents / 0 online agents after successful R10.27 dashboard-only deploy.
+
+Do not add new features.
+Do not redesign UI.
+Do not change backend behavior unless a small read-only/null-safety fix is required.
+Do not change auth/session/RBAC/token/storage logic.
+Do not change Mother, Agent, PHP Gateway runtime.
+Do not add enforcement.
+Do not add remote commands.
+Do not add install-core/deploy automation.
+Do not expose Mother token.
+Do not let browser fetch Mother directly.
+
+Rules:
+- PHP Gateway runtime remains source of truth.
+- Go Agent remains shadow-only.
+- Mother API is read server-side only.
+- Browser must never fetch Mother directly.
+- Mother token must never reach browser.
+- Dashboard remains English and LTR.
+- No Persian UI text.
+- No Google fonts/CDN.
+- No Vite.
+- No Express.
+- No pages/.
+- No lib/mock-data.ts.
+- No inference-worker / embedding / GPU / model-manager terms.
+
+Production observation after R10.27:
+- Dashboard opens successfully.
+- Mother health appears healthy.
+- Agents online shows 0/0.
+- Active agents says no agents registered yet.
+- No new runtime errors after R10.27.
+- /gateway crash from R10.26 was fixed.
+
+Task:
+Perform a read-only live data integration audit for Agent registration and telemetry visibility.
+
+Inspect:
+1. Dashboard data fetch paths
+- app/(dashboard)/page.tsx
+- app/(dashboard)/agents/page.tsx
+- app/(dashboard)/agents/[agent_id]/page.tsx
+- app/(dashboard)/gateway/page.tsx
+- lib/api.ts
+- lib/types.ts
+
+2. Mother API client expectations
+Verify what endpoints dashboard expects for:
+- agent list / registry
+- agent detail
+- telemetry freshness
+- policy sync status
+- gateway summary
+- diagnostics summary
+
+3. Mother runtime routes
+Inspect Mother Go code only for read-only route compatibility.
+Do not change Mother runtime behavior unless reporting a mismatch.
+Find whether Mother exposes the endpoints the Dashboard expects.
+
+4. Agent registration path
+Inspect Go Agent and Mother code to determine:
+- How an Agent registers with Mother
+- Whether registration happens via telemetry push, policy pull, health check, or explicit endpoint
+- What agent_id is expected
+- Whether the Dashboard requires a persisted registry entry
+- Whether json storage contains registered agents
+
+5. Storage
+Inspect json storage paths and schema expectations.
+Check whether Mother state should contain agents.
+Do not alter production data.
+
+Required output:
+- Explain why Dashboard can show Mother healthy but 0 agents.
+- List expected Mother endpoints and whether they exist.
+- List expected JSON/storage fields and whether they exist.
+- Identify whether this is:
+  a) no Agent has registered yet
+  b) Agent registration endpoint mismatch
+  c) Dashboard reading wrong endpoint/field
+  d) Mother storage not persisting agents
+  e) deployment/config issue
+- If a fix is needed, propose the smallest safe fix first.
+- Do not implement fixes unless they are dashboard-only read/null-safety fixes.
+- If backend changes are required, stop and report.
+
+Safety checks:
+- alert resolve/mute/unmute still require confirmation
+- ConfigEditor remains unused/fail-closed
+- lib/api.ts still imports server-only
+- NEXT_PUBLIC_UNIXSEE_MOTHER_BASE_URL does not exist
+- package.json binds only to 127.0.0.1:8740
+- next.config.js has no Replit iframe/dev-origin exceptions
+- X-Frame-Options remains DENY
+
+Add:
+RELEASE_NOTES_R10_28.md
+
+Run:
+cd unixsee_campaign_gateway/dashboard
+npm ci
+npm run build
+
+Output:
+unixsee_campaign_gateway-r10.28-live-data-agent-registration-verification.zip
+
+Report:
+- changed files only
+- build status
+- endpoint inventory
+- data flow diagnosis
+- whether fix is dashboard-only or requires Mother/Agent follow-up
+- whether ready for next controlled step
