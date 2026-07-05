@@ -1,0 +1,41 @@
+{
+  "node": {
+    "400dabf3442e545091132c89dd5746ee30e396ad74": {
+      "workers": {
+        "app/(dashboard)/users/page": {
+          "moduleId": "[project]/artifacts/gateway-dashboard/.next-internal/server/app/(dashboard)/users/page/actions.js { ACTIONS_MODULE0 => \"[project]/artifacts/gateway-dashboard/app/(dashboard)/users/page.tsx [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_0",
+          "filename": "artifacts/gateway-dashboard/app/(dashboard)/users/page.tsx"
+        }
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_0",
+      "filename": "artifacts/gateway-dashboard/app/(dashboard)/users/page.tsx"
+    },
+    "4027b588edbf66cc62c0ea98679bde3b020bd7e59d": {
+      "workers": {
+        "app/(dashboard)/users/page": {
+          "moduleId": "[project]/artifacts/gateway-dashboard/.next-internal/server/app/(dashboard)/users/page/actions.js { ACTIONS_MODULE0 => \"[project]/artifacts/gateway-dashboard/app/(dashboard)/users/page.tsx [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_2",
+          "filename": "artifacts/gateway-dashboard/app/(dashboard)/users/page.tsx"
+        }
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_2",
+      "filename": "artifacts/gateway-dashboard/app/(dashboard)/users/page.tsx"
+    },
+    "40f0cf2fc0566abde047eb2f19420a308d65c88c1f": {
+      "workers": {
+        "app/(dashboard)/users/page": {
+          "moduleId": "[project]/artifacts/gateway-dashboard/.next-internal/server/app/(dashboard)/users/page/actions.js { ACTIONS_MODULE0 => \"[project]/artifacts/gateway-dashboard/app/(dashboard)/users/page.tsx [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_1",
+          "filename": "artifacts/gateway-dashboard/app/(dashboard)/users/page.tsx"
+        }
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_1",
+      "filename": "artifacts/gateway-dashboard/app/(dashboard)/users/page.tsx"
+    }
+  },
+  "edge": {}
+}

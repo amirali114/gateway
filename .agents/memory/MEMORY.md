@@ -1,1 +1,1 @@
-- [Next.js-to-Express/Vite migration pitfalls](nextjs-to-express-migration-pitfalls.md) — session-in-same-request bug, response-wrapper mismatches, and `read(x!)` runtime crashes when porting apps.
+- [Next.js apps on Replit artifacts](nextjs-on-replit-artifacts.md) — custom artifact.toml, 0.0.0.0 bind, X-Frame-Options/allowedDevOrigins, absolute-URL redirect and writable-storage-path pitfalls behind the proxy.

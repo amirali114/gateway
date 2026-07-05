@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///home/runner/workspace/artifacts/gateway-dashboard/node_modules/next/src/build/webpack/loaders/next-flight-loader/server-reference.ts"],"sourcesContent":["/* eslint-disable import/no-extraneous-dependencies */\nexport { registerServerReference } from 'react-server-dom-webpack/server'\n"],"names":["registerServerReference"],"mappings":"AAAA,oDAAoD;;;+BAC3CA,2BAAAA;;;eAAAA,QAAAA,uBAAuB;;;wBAAQ","ignoreList":[0]}}]
+}

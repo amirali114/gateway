@@ -1,0 +1,17 @@
+{
+  "node": {
+    "40dc20cbf0523048d7e6c2a6b4386c950c81930134": {
+      "workers": {
+        "app/(dashboard)/gateway/page": {
+          "moduleId": "[project]/artifacts/gateway-dashboard/.next-internal/server/app/(dashboard)/gateway/page/actions.js { ACTIONS_MODULE0 => \"[project]/artifacts/gateway-dashboard/app/(dashboard)/gateway/page.tsx [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_0",
+          "filename": "artifacts/gateway-dashboard/app/(dashboard)/gateway/page.tsx"
+        }
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_0",
+      "filename": "artifacts/gateway-dashboard/app/(dashboard)/gateway/page.tsx"
+    }
+  },
+  "edge": {}
+}

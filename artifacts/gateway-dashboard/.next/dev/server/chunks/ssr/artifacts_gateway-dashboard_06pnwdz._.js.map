@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///home/runner/workspace/artifacts/gateway-dashboard/app/layout.tsx"],"sourcesContent":["import \"./globals.css\";\n\nexport const metadata = {\n  title: \"Unixsee Gateway Control\",\n  description: \"Mother-backed controlled beta dashboard for Unixsee Campaign Gateway.\"\n};\n\nexport default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {\n  return <html lang=\"en\" dir=\"ltr\"><body>{children}</body></html>;\n}\n"],"names":["metadata","title","description","RootLayout","children","lang","dir"],"mappings":";;;;;;;;;AAEO,MAAMA,WAAW;IACtBC,OAAO;IACPC,aAAa;AACf;AAEe,SAASC,WAAW,EAAEC,QAAQ,EAA2C;IACtF,qBAAO,mRAAC;QAAKC,MAAK;QAAKC,KAAI;kBAAM,cAAA,mRAAC;sBAAMF;;;;;;;;;;;AAC1C"}},
+    {"offset": {"line": 42, "column": 0}, "map": {"version":3,"sources":["file:///home/runner/workspace/artifacts/gateway-dashboard/node_modules/next/src/server/route-modules/app-page/vendored/rsc/react-jsx-dev-runtime.ts"],"sourcesContent":["module.exports = (\n  require('../../module.compiled') as typeof import('../../module.compiled')\n).vendored['react-rsc']!.ReactJsxDevRuntime\n"],"names":["module","exports","require","vendored","ReactJsxDevRuntime"],"mappings":"AAAAA,OAAOC,OAAO,GACZC,QAAQ,wJACRC,QAAQ,CAAC,YAAY,CAAEC,kBAAkB","ignoreList":[0]}}]
+}

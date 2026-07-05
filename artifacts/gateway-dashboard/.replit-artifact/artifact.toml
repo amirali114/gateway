@@ -15,17 +15,19 @@ paths = [ "/" ]
 localPort = 22790
 
 [services.development]
-run = "pnpm --filter @workspace/gateway-dashboard run dev"
+run = "npm run dev"
 
 [services.production]
-build = [ "pnpm", "--filter", "@workspace/gateway-dashboard", "run", "build" ]
-publicDir = "artifacts/gateway-dashboard/dist/public"
-serve = "static"
 
-[[services.production.rewrites]]
-from = "/*"
-to = "/index.html"
+[services.production.build]
+args = ["npm", "run", "build"]
+
+[services.production.run]
+args = ["npm", "run", "start"]
+
+[services.production.run.env]
+PORT = "22790"
+NODE_ENV = "production"
 
 [services.env]
 PORT = "22790"
-BASE_PATH = "/"

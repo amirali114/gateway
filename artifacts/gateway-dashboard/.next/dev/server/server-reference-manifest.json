@@ -1,0 +1,18 @@
+{
+  "node": {
+    "408e6fd11efcdf3d7c34ae1b583302e1d9a1c0886f": {
+      "workers": {
+        "app/login/page": {
+          "moduleId": "[project]/artifacts/gateway-dashboard/.next-internal/server/app/login/page/actions.js { ACTIONS_MODULE0 => \"[project]/artifacts/gateway-dashboard/app/login/actions.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false,
+          "exportedName": "loginAction",
+          "filename": "artifacts/gateway-dashboard/app/login/actions.ts"
+        }
+      },
+      "filename": "artifacts/gateway-dashboard/app/login/actions.ts",
+      "exportedName": "loginAction"
+    }
+  },
+  "edge": {},
+  "encryptionKey": "zm5opK8SXxtcMiBKjkBepKE+wrL+QFOJP5Q1ZKhFyH8="
+}
