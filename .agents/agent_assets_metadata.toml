@@ -36,3 +36,9 @@ id = "JDNwa0PAO96L3WlA6xLIi"
 uri = "file://unixsee_campaign_gateway-r10.22-alert-actions-safety-qa.zip"
 type = "unspecified"
 title = "R10.22 Alert Actions Safety QA ZIP"
+
+[[outputs]]
+id = "WakOtx_G6UamfyXnRDzGW"
+uri = "file://unixsee_campaign_gateway-r10.23-config-workflow-safety-plan.zip"
+type = "unspecified"
+title = "R10.23 Config Workflow Safety Plan ZIP"
