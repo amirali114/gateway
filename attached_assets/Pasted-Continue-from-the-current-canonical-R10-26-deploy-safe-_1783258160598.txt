@@ -1,0 +1,102 @@
+Continue from the current canonical R10.26 deploy-safe package.
+
+Do not add new features.
+Do not redesign UI.
+Do not change backend.
+Do not change auth/session/RBAC/token/storage logic.
+Do not add health-check banner.
+Do not add deploy, enforcement, remote-command, install-core, Mother, Agent, or PHP Gateway changes.
+
+Canonical source of truth:
+unixsee_campaign_gateway/dashboard
+
+Preview-only artifacts must not be used as release source:
+artifacts/gateway-dashboard
+
+Task:
+Final freeze verification for R10.26 deploy-safe before dashboard-only deployment.
+
+Verify:
+
+1. Package structure
+- Final release ZIP must contain unixsee_campaign_gateway/ at top level.
+- It must include unixsee_campaign_gateway/dashboard/
+- It must include docs/
+- It must include RELEASE_NOTES_R10_18 through RELEASE_NOTES_R10_26.
+- It must not be generated from artifacts/gateway-dashboard.
+
+2. Dashboard safety
+- Browser never fetches Mother directly.
+- Mother token is never exposed.
+- lib/api.ts imports server-only.
+- Mother base URL uses only UNIXSEE_MOTHER_BASE_URL.
+- NEXT_PUBLIC_UNIXSEE_MOTHER_BASE_URL must not exist.
+
+3. Action surfaces
+Check these actions only:
+- alert resolve
+- alert mute
+- alert unmute
+- config validate
+- config publish
+- config rollback
+
+For each action verify:
+- server-side only
+- requirePermission() is called inside the action
+- success audit event exists
+- failure audit event exists
+- redirect statuses are sanitized/whitelisted
+- sensitive actions have confirmation
+- users without required permission cannot see controls
+- view-only pages remain accessible with view permissions
+
+4. Alert action rules
+- resolve requires confirmation
+- mute requires confirmation
+- unmute requires confirmation
+- unmute must not be an immediate form action on the alert detail page
+- confirm page must support resolve, mute, and unmute safely
+- no raw query error text is rendered
+
+5. Config editor
+- ConfigEditor must be unused or fail-closed
+- no submit action
+- no action prop
+- no Save draft submit
+- any button must be type="button" and disabled
+- no draft write/edit UI is reachable
+
+6. Deploy-safe runtime
+- package.json must not bind Next.js to 0.0.0.0
+- dashboard must run on 127.0.0.1:8740
+- next.config.js must not contain Replit iframe/dev-origin exceptions
+- X-Frame-Options should remain DENY
+- no test credentials such as admin/TestPass123! are committed
+
+7. Forbidden regressions
+Must not contain:
+- Vite
+- Express
+- pages/
+- lib/mock-data.ts
+- Persian RTL UI
+- inference-worker
+- embedding-service
+- GPU/model-manager terms
+- browser-side Mother fetch
+- deploy/enforcement/remote-command actions
+
+Run:
+cd unixsee_campaign_gateway/dashboard
+npm ci
+npm run build
+
+Output only:
+- final verification report
+- changed files, if any
+- build status
+- confirmation whether ready for dashboard-only deploy
+
+Do not generate a new ZIP unless a real issue is fixed.
+If any issue is found, stop and report it before making changes.
