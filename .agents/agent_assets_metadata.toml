@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "x2ujnLjx1XnLgOde-aN-2"
+uri = "file://.local/release/unixsee-gateway-dashboard.zip"
+type = "unspecified"
+title = "Unixsee Gateway Dashboard — Canonical Source Release"
