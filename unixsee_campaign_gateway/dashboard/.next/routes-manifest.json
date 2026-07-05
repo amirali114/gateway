@@ -60,6 +60,14 @@
         "nxtPalert_id": "nxtPalert_id"
       },
       "namedRegex": "^/alerts/(?<nxtPalert_id>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/alerts/[alert_id]/confirm",
+      "regex": "^/alerts/([^/]+?)/confirm(?:/)?$",
+      "routeKeys": {
+        "nxtPalert_id": "nxtPalert_id"
+      },
+      "namedRegex": "^/alerts/(?<nxtPalert_id>[^/]+?)/confirm(?:/)?$"
     }
   ],
   "staticRoutes": [

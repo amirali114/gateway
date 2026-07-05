@@ -1,0 +1,72 @@
+Next task: Implement R10.21 Alert Management Actions.
+
+Base:
+Use current R10.20 baseline.
+
+Scope:
+Only implement alert management actions:
+- resolve alert
+- mute alert
+- unmute alert
+
+Allowed files:
+- dashboard/app/(dashboard)/alerts/[alert_id]/page.tsx
+- optional: dashboard/app/(dashboard)/alerts/[alert_id]/confirm/page.tsx
+- RELEASE_NOTES_R10_21.md
+- shared UI components only if absolutely needed
+
+Rules:
+- Do not change Mother, Agent, PHP Gateway.
+- Do not change auth/session/token/storage logic.
+- Do not expose Mother token to browser.
+- Browser must never fetch Mother directly.
+- Use server actions only.
+- Use existing server-side Mother API functions:
+  resolveMotherAlert
+  muteMotherAlert
+  unmuteMotherAlert
+- Every action must call requirePermission("alerts.manage") inside the server action.
+- Do not rely only on page-level permission.
+- Keep alert detail page readable with alerts.view.
+- Do not add bulk actions.
+- Do not add deploy/rollback/enforcement/remote-command actions.
+- English + LTR only.
+- No Persian text.
+- No Google fonts/CDN.
+- No AI mock terms.
+- Raw JSON only inside drawer/collapse.
+
+RBAC:
+- First inspect whether alerts.manage already exists for roles.
+- Do not change RBAC role permissions unless strictly required.
+- If alerts.manage is missing for all usable roles, stop and report instead of modifying RBAC.
+
+UI:
+- On alert detail page, show an "Alert management" card only for users with alerts.manage.
+- Resolve and mute must require confirmation.
+- Unmute may be direct but still server-side and permission-checked.
+- Show success/error state via safe redirect query params.
+- Do not expose raw Mother error details to browser.
+
+Audit:
+- Add an audit event for every attempted action:
+  success or failure
+  actor
+  action
+  alert id
+  timestamp
+- Follow existing user/audit-store patterns.
+
+After changes:
+cd unixsee_campaign_gateway/dashboard
+npm run build
+
+Output:
+unixsee_campaign_gateway-r10.21-alert-management-actions.zip
+
+Report:
+- changed files only
+- build status
+- whether RBAC was changed
+- whether any browser-side Mother fetch was added
+- audit events implemented yes/no

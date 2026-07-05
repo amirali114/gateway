@@ -1,15 +1,21 @@
+import { redirect } from "next/navigation";
 import { PageHeader } from "../../../../components/PageHeader";
 import { RawJsonDrawer } from "../../../../components/RawJsonDrawer";
 import { SectionCard } from "../../../../components/SectionCard";
 import { StatusPill } from "../../../../components/StatusPill";
 import type { PillTone } from "../../../../components/StatusPill";
 import { ErrorState } from "../../../../components/ErrorState";
-import { getMotherAlert, read, valueOrDash } from "../../../../lib/api";
-import { requirePermission } from "../../../../lib/auth";
+import { getMotherAlert, read, valueOrDash, unmuteMotherAlert } from "../../../../lib/api";
+import { requirePermission, hasPermission, motherActorHeaders, type AuthStatus } from "../../../../lib/auth";
+import { appendAudit } from "../../../../lib/user-store";
+import { type Role } from "../../../../lib/rbac";
 
 export const dynamic = "force-dynamic";
 
-type Params = { params: Promise<{ alert_id: string }> };
+type Params = {
+  params: Promise<{ alert_id: string }>;
+  searchParams?: Promise<{ ok?: string; error?: string }>;
+};
 
 function severityTone(severity: string | undefined): PillTone {
   if (severity === "critical") return "danger";
@@ -31,10 +37,37 @@ function heroBadgeTone(severity: string | undefined): "danger" | "warning" | "su
   return "";
 }
 
-export default async function AlertDetailPage({ params }: Params) {
+function auditActor(auth: AuthStatus) {
+  if (auth.role === "auth-disabled") return undefined;
+  return { id: auth.user_id, username: auth.username, role: auth.role as Role };
+}
+
+export default async function AlertDetailPage({ params, searchParams }: Params) {
   const { alert_id } = await params;
   const alertId = decodeURIComponent(alert_id);
-  await requirePermission("alerts.view");
+  const auth = await requirePermission("alerts.view");
+  const canManage = hasPermission(auth, "alerts.manage");
+  const sp = searchParams ? await searchParams : {};
+
+  async function unmuteAlertAction(formData: FormData) {
+    "use server";
+    const a = await requirePermission("alerts.manage");
+    const id = String(formData.get("alert_id") || "").trim();
+    const actor = auditActor(a);
+    if (!id) {
+      await appendAudit({ actor, action: "alert.unmute", target_type: "alert", target_id: "(empty)", result: "failure", metadata: { error: "missing_alert_id" } });
+      redirect("/alerts?error=missing_alert_id");
+      return;
+    }
+    const result = await unmuteMotherAlert(id, motherActorHeaders(a));
+    if (!result.ok) {
+      await appendAudit({ actor, action: "alert.unmute", target_type: "alert", target_id: id, result: "failure", metadata: { mother_status: result.status } });
+      redirect(`/alerts/${encodeURIComponent(id)}?error=unmute_failed`);
+      return;
+    }
+    await appendAudit({ actor, action: "alert.unmute", target_type: "alert", target_id: id, result: "success", metadata: { mother_status: result.status } });
+    redirect(`/alerts/${encodeURIComponent(id)}?ok=unmuted`);
+  }
 
   const alertResult = await getMotherAlert(alertId);
   const alert = read(alertResult)?.alert;
@@ -47,10 +80,11 @@ export default async function AlertDetailPage({ params }: Params) {
         <PageHeader
           eyebrow="Alert detail"
           title={alertId}
-          description="Read-only alert detail from Mother."
+          description="Alert detail from Mother."
           actions={<a className="button-link button-secondary" href="/alerts">Back to alerts</a>}
           meta={<StatusPill tone="danger">Unavailable</StatusPill>}
         />
+        {sp.error ? <ErrorState title="Last action failed" error={sp.error} /> : null}
         <div className="section-block">
           <SectionCard title="Alert unavailable" description="Mother could not return data for this alert ID.">
             <ErrorState error={unavailableError ?? undefined} />
@@ -62,10 +96,6 @@ export default async function AlertDetailPage({ params }: Params) {
               <div className="checklist-card">
                 <span className="checklist-card-icon">◈</span>
                 <span className="checklist-card-text">Mother must be reachable from the dashboard server. Check <a href="/diagnostics">Diagnostics</a> for Mother health.</span>
-              </div>
-              <div className="checklist-card">
-                <span className="checklist-card-icon">◈</span>
-                <span className="checklist-card-text">No action is taken from this dashboard. Alert state changes only through Mother.</span>
               </div>
             </div>
           </SectionCard>
@@ -84,15 +114,31 @@ export default async function AlertDetailPage({ params }: Params) {
       <PageHeader
         eyebrow="Alert detail"
         title={alert.title || alertId}
-        description="Read-only alert detail from Mother. No management actions are available from this dashboard."
+        description={canManage
+          ? "Alert detail from Mother. Resolve, mute, and unmute actions are available below. Every action is recorded in the audit trail."
+          : "Read-only alert detail from Mother. You have view-only access — management actions require alerts.manage permission."}
         actions={<a className="button-link button-secondary" href="/alerts">Back to alerts</a>}
         meta={<StatusPill tone={severityTone(alert.severity)}>{alert.severity || "info"}</StatusPill>}
       />
 
-      <div className="readonly-banner">
-        <span>◈</span>
-        <span><b>Read-only.</b> This page shows alert data as returned by the Mother API. Resolve, mute, and acknowledge actions are intentionally not exposed — alert state changes only through Mother.</span>
-      </div>
+      {canManage ? (
+        <div className="readonly-banner" style={{ borderColor: "var(--warn, #e0a800)", background: "var(--warn-bg, #fffbe6)" }}>
+          <span>◈</span>
+          <span><b>Management actions enabled.</b> Resolve and mute require confirmation on the next page. Unmute is immediate. Every action is server-side and recorded in the audit trail.</span>
+        </div>
+      ) : (
+        <div className="readonly-banner">
+          <span>◈</span>
+          <span><b>Read-only.</b> You have view-only access. Alert state changes only through Mother. Management actions require alerts.manage permission.</span>
+        </div>
+      )}
+
+      {sp.ok ? (
+        <div className="notice">Action completed: <b>{sp.ok}</b>. Alert state has been updated in Mother.</div>
+      ) : null}
+      {sp.error ? (
+        <ErrorState title="Action failed" error={sp.error} />
+      ) : null}
 
       <div className="hero-panel">
         <div className="hero-main">
@@ -111,7 +157,10 @@ export default async function AlertDetailPage({ params }: Params) {
           <div className="hero-stat"><span>Scope</span><b>{valueOrDash(alert.scope)}</b></div>
           <div className="hero-stat"><span>Agent</span><b className="mono">{valueOrDash(alert.agent_id)}</b></div>
           <div className="hero-stat"><span>Occurrences</span><b>{valueOrDash(alert.occurrence_count)}</b></div>
-          <div className="hero-stat"><span>Management actions</span><b>None</b></div>
+          <div className="hero-stat">
+            <span>Management</span>
+            <b>{canManage ? "Resolve / Mute / Unmute" : "View only"}</b>
+          </div>
         </div>
       </div>
 
@@ -178,13 +227,68 @@ export default async function AlertDetailPage({ params }: Params) {
         </SectionCard>
       )}
 
+      {/* Management actions — visible only to alerts.manage holders */}
+      {canManage && (
+        <SectionCard title="Alert management" description="All actions run server-side. Every attempted action — success or failure — is recorded in the audit trail. Resolve and mute require a confirmation step.">
+          <div className="checklist-cards">
+            <div className="checklist-card">
+              <span className="checklist-card-icon">!</span>
+              <span className="checklist-card-text">
+                <b>Resolve</b> — marks this alert as resolved. Use when the underlying issue is confirmed fixed.
+                {" "}
+                <a
+                  className="button-link button-secondary"
+                  href={`/alerts/${encodeURIComponent(alertId)}/confirm?action=resolve`}
+                >
+                  Resolve this alert →
+                </a>
+              </span>
+            </div>
+            <div className="checklist-card">
+              <span className="checklist-card-icon">◈</span>
+              <span className="checklist-card-text">
+                <b>Mute</b> — suppresses notifications for this alert. The alert remains visible in the list.
+                {" "}
+                <a
+                  className="button-link button-secondary"
+                  href={`/alerts/${encodeURIComponent(alertId)}/confirm?action=mute`}
+                >
+                  Mute this alert →
+                </a>
+              </span>
+            </div>
+            <div className="checklist-card">
+              <span className="checklist-card-icon">◈</span>
+              <span className="checklist-card-text">
+                <b>Unmute</b> — restores notifications for a muted alert. No confirmation required.
+                {" "}
+                <form action={unmuteAlertAction} style={{ display: "inline" }}>
+                  <input type="hidden" name="alert_id" value={alertId} />
+                  <button type="submit" className="button-link button-secondary">Unmute this alert</button>
+                </form>
+              </span>
+            </div>
+          </div>
+        </SectionCard>
+      )}
+
       {/* Safety model */}
       <SectionCard title="Safety model" description="What this alert detail page can and cannot do.">
         <div className="checklist-cards">
           <div className="checklist-card"><span className="checklist-card-icon">✓</span><span className="checklist-card-text">Alert data is fetched server-side only — the browser never calls Mother directly.</span></div>
           <div className="checklist-card"><span className="checklist-card-icon">✓</span><span className="checklist-card-text">The Mother management token is never delivered to the browser.</span></div>
-          <div className="checklist-card"><span className="checklist-card-icon">✓</span><span className="checklist-card-text">No resolve, mute, acknowledge, or any write action is exposed on this page.</span></div>
-          <div className="checklist-card"><span className="checklist-card-icon">✓</span><span className="checklist-card-text">Alert state changes only through Mother — this page reflects, it does not control.</span></div>
+          {canManage ? (
+            <>
+              <div className="checklist-card"><span className="checklist-card-icon">✓</span><span className="checklist-card-text">Every management action runs server-side and requires alerts.manage permission, checked inside the server action — not only at page load.</span></div>
+              <div className="checklist-card"><span className="checklist-card-icon">✓</span><span className="checklist-card-text">Resolve and mute require a separate confirmation step. Unmute is immediate but still server-side and permission-gated.</span></div>
+              <div className="checklist-card"><span className="checklist-card-icon">✓</span><span className="checklist-card-text">Every action — including failures — is appended to the audit trail with actor, action, alert ID, and timestamp.</span></div>
+            </>
+          ) : (
+            <>
+              <div className="checklist-card"><span className="checklist-card-icon">✓</span><span className="checklist-card-text">You have view-only access. Management actions require alerts.manage permission and are not visible to this role.</span></div>
+              <div className="checklist-card"><span className="checklist-card-icon">✓</span><span className="checklist-card-text">Alert state changes only through Mother — this page reflects, it does not control.</span></div>
+            </>
+          )}
         </div>
       </SectionCard>
 

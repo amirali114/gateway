@@ -1,4 +1,17 @@
 {
-  "node": {},
+  "node": {
+    "40a9efd72f7165a5ae8edac49521b172ee467f05ff": {
+      "workers": {
+        "app/(dashboard)/alerts/[alert_id]/page": {
+          "moduleId": 87028,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_0",
+          "filename": "unixsee_campaign_gateway/dashboard/app/(dashboard)/alerts/[alert_id]/page.tsx"
+        }
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_0",
+      "filename": "unixsee_campaign_gateway/dashboard/app/(dashboard)/alerts/[alert_id]/page.tsx"
+    }
+  },
   "edge": {}
 }
