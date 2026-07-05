@@ -54,16 +54,19 @@ export default async function GatewayPage({ searchParams }: Props) {
   const agentsResult = await getMotherAgents();
   const agents = read(agentsResult)?.agents || [];
   const selectedAgent = sp.agent_id || agents[0]?.agent_id || "";
+
+  const noAgentSelected = { ok: false as const, error: "No agent selected" };
   const [cfgResult, diffResult, versionsResult] = selectedAgent ? await Promise.all([
     getMotherAgentConfig(selectedAgent),
     getMotherAgentConfigDiff(selectedAgent),
     getMotherAgentConfigVersions(selectedAgent)
-  ]) : [undefined, undefined, undefined] as const;
-  const activeRecord = asRecord(read(cfgResult!)?.active_config);
-  const draftRecord = asRecord(read(cfgResult!)?.draft_config);
+  ]) : [noAgentSelected, noAgentSelected, noAgentSelected] as const;
+
+  const activeRecord = asRecord(read(cfgResult)?.active_config);
+  const draftRecord = asRecord(read(cfgResult)?.draft_config);
   const activeConfig = configFrom(activeRecord);
-  const versions = read(versionsResult!)?.versions || [];
-  const dirty = Boolean(read(diffResult!)?.diff?.dirty);
+  const versions = read(versionsResult)?.versions || [];
+  const dirty = Boolean(read(diffResult)?.diff?.dirty);
 
   async function validateDraftAction(formData: FormData): Promise<void> {
     "use server";

@@ -18,3 +18,9 @@ id = "W-hcwv00wE6GAfO8om27N"
 uri = "file://.local/release/unixsee_campaign_gateway-r10.26-final-action-surface-qa-deploy-safe.zip"
 type = "unspecified"
 title = "R10.26 Deploy-Safe Final Release"
+
+[[outputs]]
+id = "yie-Bw3we9_SWOY9NH98Z"
+uri = "file://.local/release/unixsee_campaign_gateway-r10.27-gateway-page-null-safety.zip"
+type = "unspecified"
+title = "R10.27 Gateway Page Null-Safety Fix"

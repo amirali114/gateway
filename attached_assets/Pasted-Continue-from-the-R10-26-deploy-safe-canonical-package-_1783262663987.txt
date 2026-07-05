@@ -1,0 +1,76 @@
+Continue from the R10.26 deploy-safe canonical package, not from the server rollback.
+
+Base file:
+unixsee_campaign_gateway-r10.26-final-action-surface-qa-deploy-safe.zip
+
+Create:
+unixsee_campaign_gateway-r10.27-gateway-page-null-safety.zip
+
+Task:
+Fix production crash on /gateway page only.
+
+Observed production error:
+TypeError: Cannot read properties of undefined (reading 'ok')
+Route:
+app/(dashboard)/gateway/page.tsx
+
+Do not redesign UI.
+Do not add features.
+Do not change backend.
+Do not change auth/session/RBAC/token/storage logic.
+Do not change Mother, Agent, PHP Gateway, install-core, deploy, enforcement, or remote-command logic.
+
+Rules:
+- PHP Gateway remains runtime source of truth.
+- Go Agent remains shadow-only.
+- Mother API must only be read server-side.
+- Browser must never fetch Mother directly.
+- Mother token must never be exposed.
+- Dashboard must remain English and LTR.
+- No Persian UI text.
+- No Google fonts/CDN.
+- No Vite.
+- No Express.
+- No pages/.
+- No lib/mock-data.ts.
+- No AI mock terms.
+
+Fix scope:
+- app/(dashboard)/gateway/page.tsx
+- optionally lib/api.ts only if the undefined response shape originates there
+
+Required behavior:
+- /gateway must never crash if Mother/API returns missing, undefined, partial, or empty response fields.
+- Every access like response.ok must be guarded with optional chaining or a normalized fallback object.
+- Empty/unavailable Mother data should render the existing graceful empty/error state.
+- Do not hide real errors behind fake healthy data.
+- Do not introduce mock data.
+- Preserve existing R10.26 visual UI.
+- Preserve alert/config action safety from R10.26.
+
+Also verify:
+- alert resolve/mute/unmute still require confirmation
+- ConfigEditor remains unused/fail-closed
+- lib/api.ts still imports server-only
+- NEXT_PUBLIC_UNIXSEE_MOTHER_BASE_URL does not exist
+- package.json binds only to 127.0.0.1:8740
+- next.config.js has no Replit iframe/dev-origin exceptions
+- X-Frame-Options remains DENY
+
+Add:
+RELEASE_NOTES_R10_27.md
+
+Run:
+cd unixsee_campaign_gateway/dashboard
+npm ci
+npm run build
+
+Output:
+unixsee_campaign_gateway-r10.27-gateway-page-null-safety.zip
+
+Report:
+- changed files only
+- exact cause of undefined .ok crash
+- build status
+- route inventory
+- confirmation ready for dashboard-only deploy
