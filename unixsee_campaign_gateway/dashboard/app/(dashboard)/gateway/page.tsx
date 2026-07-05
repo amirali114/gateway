@@ -99,9 +99,9 @@ export default async function GatewayPage({ searchParams }: Props) {
     redirect(`/gateway?agent_id=${encodeURIComponent(agentId)}&validate_ok=valid`);
   }
 
-  const bannerText = hasAnyConfigWrite
-    ? "PHP Gateway is the runtime source of truth. Agents run in shadow-only mode — they observe and compare, they do not enforce. Config validate, publish, and rollback controls are available below for authorised roles. These actions do not change live traffic."
-    : "PHP Gateway is the runtime source of truth. Agents run in shadow-only mode — they observe and compare, they do not enforce. This page only reflects what Mother has stored; no write, publish, or rollback action is available to your current role.";
+  const bannerSuffix = hasAnyConfigWrite
+    ? "Agents run in shadow-only mode — they observe and compare, they do not enforce. Config validate, publish, and rollback controls are available below for authorised roles. These actions do not change live traffic."
+    : "Agents run in shadow-only mode — they observe and compare, they do not enforce. This page only reflects what Mother has stored; no write, publish, or rollback action is available to your current role.";
 
   return (
     <>
@@ -116,7 +116,7 @@ export default async function GatewayPage({ searchParams }: Props) {
 
       <div className="readonly-banner">
         <span>◈</span>
-        <span><b>PHP Gateway is the runtime source of truth.</b> {bannerText.replace("PHP Gateway is the runtime source of truth. ", "")}</span>
+        <span><b>PHP Gateway is the runtime source of truth.</b> {bannerSuffix}</span>
       </div>
 
       {safeOk && (

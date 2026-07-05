@@ -48,3 +48,9 @@ id = "3Z-4kcq7-Tw5RkT5aHhqu"
 uri = "file://unixsee_campaign_gateway-r10.24-config-workflow-actions.zip"
 type = "unspecified"
 title = "R10.24 Config Workflow Actions ZIP"
+
+[[outputs]]
+id = "VBwabM0K_QAIb-flH5cpp"
+uri = "file://unixsee_campaign_gateway-r10.25-config-workflow-safety-qa.zip"
+type = "unspecified"
+title = "R10.25 Config Workflow Safety QA ZIP"
