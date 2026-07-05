@@ -30,3 +30,9 @@ id = "kRXfR1Wg5B22Xyw9n8yHN"
 uri = "file://unixsee_campaign_gateway-r10.21-alert-management-actions.zip"
 type = "unspecified"
 title = "R10.21 Alert Management Actions ZIP"
+
+[[outputs]]
+id = "JDNwa0PAO96L3WlA6xLIi"
+uri = "file://unixsee_campaign_gateway-r10.22-alert-actions-safety-qa.zip"
+type = "unspecified"
+title = "R10.22 Alert Actions Safety QA ZIP"

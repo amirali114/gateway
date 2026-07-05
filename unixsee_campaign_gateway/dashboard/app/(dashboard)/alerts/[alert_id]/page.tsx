@@ -69,6 +69,9 @@ export default async function AlertDetailPage({ params, searchParams }: Params) 
     redirect(`/alerts/${encodeURIComponent(id)}?ok=unmuted`);
   }
 
+  const KNOWN_OK = new Set(["resolved", "muted", "unmuted"]);
+  const safeOk = sp.ok && KNOWN_OK.has(sp.ok) ? sp.ok : null;
+
   const alertResult = await getMotherAlert(alertId);
   const alert = read(alertResult)?.alert;
 
@@ -133,8 +136,8 @@ export default async function AlertDetailPage({ params, searchParams }: Params) 
         </div>
       )}
 
-      {sp.ok ? (
-        <div className="notice">Action completed: <b>{sp.ok}</b>. Alert state has been updated in Mother.</div>
+      {safeOk ? (
+        <div className="notice">Action completed: <b>{safeOk}</b>. Alert state has been updated in Mother.</div>
       ) : null}
       {sp.error ? (
         <ErrorState title="Action failed" error={sp.error} />
