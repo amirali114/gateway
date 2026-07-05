@@ -12,3 +12,9 @@ id = "dezpudshyWCj8ANxmiSzq"
 uri = "file://.local/release/unixsee_campaign_gateway-r10.26-final-action-surface-qa.zip"
 type = "unspecified"
 title = "R10.26 Final Action-Surface QA Release (canonical structure)"
+
+[[outputs]]
+id = "W-hcwv00wE6GAfO8om27N"
+uri = "file://.local/release/unixsee_campaign_gateway-r10.26-final-action-surface-qa-deploy-safe.zip"
+type = "unspecified"
+title = "R10.26 Deploy-Safe Final Release"

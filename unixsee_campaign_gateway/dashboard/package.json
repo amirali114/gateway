@@ -4,9 +4,9 @@
   "private": true,
   "description": "English LTR Mother-backed controlled beta dashboard for Unixsee Campaign Gateway.",
   "scripts": {
-    "dev": "next dev -H 0.0.0.0 -p ${PORT:-8740}",
+    "dev": "next dev -H 127.0.0.1 -p 8740",
     "build": "next build",
-    "start": "next start -H 0.0.0.0 -p ${PORT:-8740}"
+    "start": "next start -H 127.0.0.1 -p 8740"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

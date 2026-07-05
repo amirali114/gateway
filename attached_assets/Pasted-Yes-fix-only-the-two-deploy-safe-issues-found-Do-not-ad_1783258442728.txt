@@ -1,0 +1,78 @@
+Yes, fix only the two deploy-safe issues found.
+
+Do not add a pre-deploy CI script.
+Do not add health-check banner.
+Do not add new features.
+Do not redesign UI.
+Do not change backend.
+Do not change auth/session/RBAC/token/storage logic.
+Do not touch Mother, Agent, PHP Gateway, install-core, deploy, enforcement, or remote-command logic.
+
+Scope:
+Canonical source only:
+unixsee_campaign_gateway/dashboard
+
+Allowed canonical changes:
+1. unixsee_campaign_gateway/dashboard/package.json
+2. unixsee_campaign_gateway/dashboard/next.config.js
+
+Required fixes:
+
+1. package.json
+Change dev/start scripts so the canonical dashboard binds only to:
+127.0.0.1:8740
+
+It must not bind to:
+0.0.0.0
+${PORT}
+Replit preview host/port
+
+Expected canonical behavior:
+- dev runs on 127.0.0.1:8740
+- start runs on 127.0.0.1:8740
+
+2. next.config.js
+Remove all Replit iframe/dev-origin exceptions from the canonical source.
+
+Canonical next.config.js must not contain:
+- allowedDevOrigins for Replit
+- *.replit.dev
+- *.repl.co
+- iframe preview exceptions
+- dev-only X-Frame-Options relaxation
+
+X-Frame-Options should remain DENY in canonical source.
+
+Important:
+Replit preview-only changes may exist only in:
+artifacts/gateway-dashboard
+
+But the final release ZIP must be generated only from the canonical project root and must preserve:
+unixsee_campaign_gateway/dashboard/...
+
+After fixing:
+Run:
+
+cd unixsee_campaign_gateway/dashboard
+npm ci
+npm run build
+
+Then verify:
+- grep finds no 0.0.0.0 in unixsee_campaign_gateway/dashboard/package.json
+- grep finds no replit/repl.co/allowedDevOrigins in unixsee_campaign_gateway/dashboard/next.config.js
+- lib/api.ts still imports server-only
+- NEXT_PUBLIC_UNIXSEE_MOTHER_BASE_URL does not exist anywhere
+- no admin/TestPass123! exists anywhere
+- no Vite/Express/pages/lib/mock-data.ts exists
+- alert resolve/mute/unmute still require confirmation
+- ConfigEditor remains unused/fail-closed
+
+Generate corrected release ZIP from repository root named:
+unixsee_campaign_gateway-r10.26-final-action-surface-qa-deploy-safe.zip
+
+Report:
+- changed files only
+- build status
+- confirmation no Replit preview settings remain in canonical source
+- confirmation final ZIP was generated from unixsee_campaign_gateway/, not artifacts/
+- whether ready for dashboard-only deploy
