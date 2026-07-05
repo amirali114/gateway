@@ -1,0 +1,1 @@
+- [Next.js-to-Express/Vite migration pitfalls](nextjs-to-express-migration-pitfalls.md) — session-in-same-request bug, response-wrapper mismatches, and `read(x!)` runtime crashes when porting apps.

@@ -18,3 +18,17 @@ expertMode = true
 [postMerge]
 path = "scripts/post-merge.sh"
 timeoutMs = 20000
+
+[nix]
+channel = "stable-25_05"
+
+[userenv]
+
+[userenv.shared]
+DASHBOARD_AUTH_ENABLED = "true"
+DASHBOARD_TRUST_PROXY = "false"
+DASHBOARD_SESSION_SECRET = "e4e2b4e3e510671eef475829f75b3f1e2bd7dd04d5785971af158558887fa2ad"
+DASHBOARD_BOOTSTRAP_ADMIN_USERNAME = "admin"
+DASHBOARD_BOOTSTRAP_ADMIN_EMAIL = "admin@unixsee.local"
+DASHBOARD_BOOTSTRAP_ADMIN_PASSWORD_HASH = "$2a$12$8KNhGpcpFgxeK/UDK0zqbOYjVLROqmRhiT6RqslEY0EPC.KbdZ19a"
+UNIXSEE_MOTHER_BASE_URL = "http://127.0.0.1:8732"

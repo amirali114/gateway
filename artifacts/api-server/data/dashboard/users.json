@@ -1,0 +1,18 @@
+{
+  "storage_version": 1,
+  "users": [
+    {
+      "id": "6c5e1b2b-3f00-4fc8-8370-0ca3e4953ff7",
+      "username": "admin",
+      "display_name": "admin",
+      "email": "admin@unixsee.local",
+      "role": "owner",
+      "status": "active",
+      "password_hash": "$2a$12$8KNhGpcpFgxeK/UDK0zqbOYjVLROqmRhiT6RqslEY0EPC.KbdZ19a",
+      "created_at": "2026-07-05T09:58:00.097Z",
+      "updated_at": "2026-07-05T10:05:52.306Z",
+      "password_changed_at": "2026-07-05T09:58:00.097Z",
+      "last_login_at": "2026-07-05T10:05:52.306Z"
+    }
+  ]
+}
