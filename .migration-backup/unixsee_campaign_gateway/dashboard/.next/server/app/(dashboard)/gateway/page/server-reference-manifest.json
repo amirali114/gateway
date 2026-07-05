@@ -1,4 +1,17 @@
 {
-  "node": {},
+  "node": {
+    "40e104cddc58dec501a886c475510541620a2e881d": {
+      "workers": {
+        "app/(dashboard)/gateway/page": {
+          "moduleId": 68842,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_0",
+          "filename": "unixsee_campaign_gateway/dashboard/app/(dashboard)/gateway/page.tsx"
+        }
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_0",
+      "filename": "unixsee_campaign_gateway/dashboard/app/(dashboard)/gateway/page.tsx"
+    }
+  },
   "edge": {}
 }

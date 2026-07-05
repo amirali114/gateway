@@ -65,6 +65,24 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../app/(dashboard)/alerts/[alert_id]/confirm/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/alerts/[alert_id]/confirm">> = Specific
+  const handler = {} as typeof import("../../app/(dashboard)/alerts/[alert_id]/confirm/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/(dashboard)/alerts/[alert_id]/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/alerts/[alert_id]">> = Specific
+  const handler = {} as typeof import("../../app/(dashboard)/alerts/[alert_id]/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../app/(dashboard)/alerts/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/alerts">> = Specific
@@ -87,6 +105,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 {
   type __IsExpected<Specific extends AppPageConfig<"/diagnostics">> = Specific
   const handler = {} as typeof import("../../app/(dashboard)/diagnostics/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/(dashboard)/gateway/[agent_id]/confirm/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/gateway/[agent_id]/confirm">> = Specific
+  const handler = {} as typeof import("../../app/(dashboard)/gateway/[agent_id]/confirm/page.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check

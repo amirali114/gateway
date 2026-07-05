@@ -1,1 +1,0 @@
-Font files were removed from this generated package. Add licensed fonts manually on your own server if needed.

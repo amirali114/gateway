@@ -2,67 +2,55 @@ uploads = []
 generated = []
 
 [[outputs]]
-id = "SczHI2lMvGmyQOt_-OGKz"
-uri = "file://r10.6-ui-patch.tar.gz"
+id = "SxQRoCuYz_RBi90N61gbW"
+uri = "file://unixsee_campaign_gateway-r10.18-function-integration-audit.zip"
 type = "unspecified"
-title = "r10.6-ui-patch — Next.js App Router UI Layer"
+title = "R10.18 Function/Integration Audit ZIP"
 
 [[outputs]]
-id = "P1ROX1Bwi51f_wiAKWfrL"
-uri = "file://exports/unixsee_campaign_gateway-r10.8-overview-polish.zip"
+id = "791nThpO5-Zk-D2vetexu"
+uri = "file://unixsee_campaign_gateway-r10.18-function-integration-audit-fixed.zip"
 type = "unspecified"
-title = "unixsee_campaign_gateway-r10.8-overview-polish.zip"
+title = "R10.18 Audit ZIP — corrected packaging"
 
 [[outputs]]
-id = "TFAmUkO-VDVCu7aYng_qM"
-uri = "file://exports/unixsee_campaign_gateway-r10.9-agents-ui-polish.zip"
+id = "Iwgm2DhdDEEjBk2e1cLMS"
+uri = "file://unixsee_campaign_gateway-r10.19-alert-detail-readonly.zip"
 type = "unspecified"
-title = "unixsee_campaign_gateway-r10.9-agents-ui-polish.zip"
+title = "R10.19 Alert Detail Read-Only ZIP"
 
 [[outputs]]
-id = "sujpGN_8vXzzAHlTjAaP2"
-uri = "file://exports/unixsee_campaign_gateway-r10.10-release-production-ui-polish.zip"
+id = "Mz-3xPC__itiTdbp7y4pa"
+uri = "file://unixsee_campaign_gateway-r10.20-alert-management-safety-plan.zip"
 type = "unspecified"
-title = "unixsee_campaign_gateway-r10.10-release-production-ui-polish.zip"
+title = "R10.20 Alert Management Safety Plan ZIP"
 
 [[outputs]]
-id = "NuH8SuuHshHZfTfoxm5er"
-uri = "file://exports/unixsee_campaign_gateway-r10.11-mother-diagnostics-ui-polish.zip"
+id = "kRXfR1Wg5B22Xyw9n8yHN"
+uri = "file://unixsee_campaign_gateway-r10.21-alert-management-actions.zip"
 type = "unspecified"
-title = "unixsee_campaign_gateway r10.11 (Mother & Diagnostics UI polish)"
+title = "R10.21 Alert Management Actions ZIP"
 
 [[outputs]]
-id = "C3__35SFBEI-zxWECfmhe"
-uri = "file://exports/unixsee_campaign_gateway-r10.12-gateway-policy-alerts-ui-polish.zip"
+id = "JDNwa0PAO96L3WlA6xLIi"
+uri = "file://unixsee_campaign_gateway-r10.22-alert-actions-safety-qa.zip"
 type = "unspecified"
-title = "unixsee_campaign_gateway r10.12 (Gateway, Policy & Alerts UI polish)"
+title = "R10.22 Alert Actions Safety QA ZIP"
 
 [[outputs]]
-id = "qlKz8kDfJVuN29ROjLug9"
-uri = "file://exports/unixsee_campaign_gateway-r10.13-users-audit-settings-ui-polish.zip"
+id = "WakOtx_G6UamfyXnRDzGW"
+uri = "file://unixsee_campaign_gateway-r10.23-config-workflow-safety-plan.zip"
 type = "unspecified"
-title = "unixsee_campaign_gateway r10.13 (Users, Audit & Settings UI polish)"
+title = "R10.23 Config Workflow Safety Plan ZIP"
 
 [[outputs]]
-id = "F9Za1A0O0qi8v9zhWdPp9"
-uri = "file://exports/unixsee_campaign_gateway-r10.14-sync-login-final-ui-polish.zip"
+id = "3Z-4kcq7-Tw5RkT5aHhqu"
+uri = "file://unixsee_campaign_gateway-r10.24-config-workflow-actions.zip"
 type = "unspecified"
-title = "unixsee_campaign_gateway r10.14 (Sync, Login & Final Consistency Pass)"
+title = "R10.24 Config Workflow Actions ZIP"
 
 [[outputs]]
-id = "Oi1bSifsuMmnIk3q3LdMT"
-uri = "file://exports/unixsee_campaign_gateway-r10.15-final-dashboard-qa.zip"
+id = "VBwabM0K_QAIb-flH5cpp"
+uri = "file://unixsee_campaign_gateway-r10.25-config-workflow-safety-qa.zip"
 type = "unspecified"
-title = "unixsee_campaign_gateway r10.15 (Final QA Pass)"
-
-[[outputs]]
-id = "7WLSC1ZMszF2Snwvqfnte"
-uri = "file://exports/unixsee_campaign_gateway-r10.16-mother-agent-product-surface.zip"
-type = "unspecified"
-title = "R10.16 — Mother + Agent Product Surface"
-
-[[outputs]]
-id = "xuVmNQlAQfAFH_v3PwWEZ"
-uri = "file://exports/unixsee_campaign_gateway-r10.17-final-visual-acceptance.zip"
-type = "unspecified"
-title = "R10.17 — Final Visual Acceptance"
+title = "R10.25 Config Workflow Safety QA ZIP"

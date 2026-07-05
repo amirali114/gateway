@@ -1,9 +1,12 @@
 {
   "/(dashboard)/agents/[agent_id]/page": "/agents/[agent_id]",
   "/(dashboard)/agents/page": "/agents",
+  "/(dashboard)/alerts/[alert_id]/confirm/page": "/alerts/[alert_id]/confirm",
+  "/(dashboard)/alerts/[alert_id]/page": "/alerts/[alert_id]",
   "/(dashboard)/alerts/page": "/alerts",
   "/(dashboard)/audit/page": "/audit",
   "/(dashboard)/diagnostics/page": "/diagnostics",
+  "/(dashboard)/gateway/[agent_id]/confirm/page": "/gateway/[agent_id]/confirm",
   "/(dashboard)/gateway/page": "/gateway",
   "/(dashboard)/mother/page": "/mother",
   "/(dashboard)/page": "/",
