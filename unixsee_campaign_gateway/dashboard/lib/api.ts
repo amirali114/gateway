@@ -267,16 +267,16 @@ export function getMotherAgentConfigVersions(agentId: string) {
   return safeFetchJson<MotherConfigVersionsResponse>(motherBaseUrl, `/v1/agents/${encodePathPart(agentId)}/config/versions`);
 }
 
-export function validateMotherAgentConfig(agentId: string, config: unknown) {
-  return postMotherJson<MotherConfigValidationResponse>(`/v1/agents/${encodePathPart(agentId)}/config/validate`, { config });
+export function validateMotherAgentConfig(agentId: string, config: unknown, actorHeaders: Record<string, string> = {}) {
+  return postMotherJson<MotherConfigValidationResponse>(`/v1/agents/${encodePathPart(agentId)}/config/validate`, { config }, undefined, actorHeaders);
 }
 
-export function publishMotherAgentConfig(agentId: string, note: string) {
-  return postMotherJson<MotherConfigResponse>(`/v1/agents/${encodePathPart(agentId)}/config/publish`, { note });
+export function publishMotherAgentConfig(agentId: string, note: string, actorHeaders: Record<string, string> = {}) {
+  return postMotherJson<MotherConfigResponse>(`/v1/agents/${encodePathPart(agentId)}/config/publish`, { note }, undefined, actorHeaders);
 }
 
-export function rollbackMotherAgentConfig(agentId: string, targetVersion: number, note: string) {
-  return postMotherJson<MotherConfigResponse>(`/v1/agents/${encodePathPart(agentId)}/config/rollback`, { target_version: targetVersion, note });
+export function rollbackMotherAgentConfig(agentId: string, targetVersion: number, note: string, actorHeaders: Record<string, string> = {}) {
+  return postMotherJson<MotherConfigResponse>(`/v1/agents/${encodePathPart(agentId)}/config/rollback`, { target_version: targetVersion, note }, undefined, actorHeaders);
 }
 
 export function controlPlaneConfigFromForm(formData: FormData) {

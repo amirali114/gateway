@@ -68,6 +68,14 @@
         "nxtPalert_id": "nxtPalert_id"
       },
       "namedRegex": "^/alerts/(?<nxtPalert_id>[^/]+?)/confirm(?:/)?$"
+    },
+    {
+      "page": "/gateway/[agent_id]/confirm",
+      "regex": "^/gateway/([^/]+?)/confirm(?:/)?$",
+      "routeKeys": {
+        "nxtPagent_id": "nxtPagent_id"
+      },
+      "namedRegex": "^/gateway/(?<nxtPagent_id>[^/]+?)/confirm(?:/)?$"
     }
   ],
   "staticRoutes": [

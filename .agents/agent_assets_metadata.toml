@@ -42,3 +42,9 @@ id = "WakOtx_G6UamfyXnRDzGW"
 uri = "file://unixsee_campaign_gateway-r10.23-config-workflow-safety-plan.zip"
 type = "unspecified"
 title = "R10.23 Config Workflow Safety Plan ZIP"
+
+[[outputs]]
+id = "3Z-4kcq7-Tw5RkT5aHhqu"
+uri = "file://unixsee_campaign_gateway-r10.24-config-workflow-actions.zip"
+type = "unspecified"
+title = "R10.24 Config Workflow Actions ZIP"

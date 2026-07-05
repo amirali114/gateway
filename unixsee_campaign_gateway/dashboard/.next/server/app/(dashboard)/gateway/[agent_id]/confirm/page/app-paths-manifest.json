@@ -1,0 +1,3 @@
+{
+  "/(dashboard)/gateway/[agent_id]/confirm/page": "app/(dashboard)/gateway/[agent_id]/confirm/page.js"
+}

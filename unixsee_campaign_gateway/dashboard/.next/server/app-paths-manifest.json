@@ -6,6 +6,7 @@
   "/(dashboard)/alerts/page": "app/(dashboard)/alerts/page.js",
   "/(dashboard)/audit/page": "app/(dashboard)/audit/page.js",
   "/(dashboard)/diagnostics/page": "app/(dashboard)/diagnostics/page.js",
+  "/(dashboard)/gateway/[agent_id]/confirm/page": "app/(dashboard)/gateway/[agent_id]/confirm/page.js",
   "/(dashboard)/gateway/page": "app/(dashboard)/gateway/page.js",
   "/(dashboard)/mother/page": "app/(dashboard)/mother/page.js",
   "/(dashboard)/page": "app/(dashboard)/page.js",

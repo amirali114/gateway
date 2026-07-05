@@ -6,6 +6,7 @@
   "/(dashboard)/alerts/page": "/alerts",
   "/(dashboard)/audit/page": "/audit",
   "/(dashboard)/diagnostics/page": "/diagnostics",
+  "/(dashboard)/gateway/[agent_id]/confirm/page": "/gateway/[agent_id]/confirm",
   "/(dashboard)/gateway/page": "/gateway",
   "/(dashboard)/mother/page": "/mother",
   "/(dashboard)/page": "/",
