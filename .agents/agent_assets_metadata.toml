@@ -18,3 +18,9 @@ id = "Iwgm2DhdDEEjBk2e1cLMS"
 uri = "file://unixsee_campaign_gateway-r10.19-alert-detail-readonly.zip"
 type = "unspecified"
 title = "R10.19 Alert Detail Read-Only ZIP"
+
+[[outputs]]
+id = "Mz-3xPC__itiTdbp7y4pa"
+uri = "file://unixsee_campaign_gateway-r10.20-alert-management-safety-plan.zip"
+type = "unspecified"
+title = "R10.20 Alert Management Safety Plan ZIP"
