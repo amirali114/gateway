@@ -1,0 +1,97 @@
+Act as a strict senior Go production reliability engineer.
+
+PROJECT:
+Unixsee Campaign Gateway
+
+BASE ZIP:
+unixsee_campaign_gateway-r10.28-live-data-agent-registration-verification-deploy-safe.zip
+or the current canonical R10.27/R10.28 source deployed on server.
+
+CREATE:
+unixsee_campaign_gateway-r10.29-mother-json-storage-atomic-save-concurrency-fix.zip
+
+PRODUCTION OBSERVATION:
+After Agent was installed and running successfully:
+- unixsee-agent.service is active and enabled.
+- Agent binds only to 127.0.0.1:8731.
+- Agent mode is shadow.
+- Agent policy source is Mother and status is fresh.
+- Mother /v1/agents shows staging-agent-001 online and telemetry fresh.
+- Dashboard now shows Agents online 1/1.
+
+However Mother health report keeps recording warning events:
+Telemetry validation failed
+rename json storage temp: rename /var/lib/unixsee-gateway/mother/mother-state.json.tmp /var/lib/unixsee-gateway/mother/mother-state.json: no such file or directory
+
+Server-side checks confirmed:
+- Mother runs as unixsee.
+- /var/lib/unixsee-gateway/mother is owned by unixsee:unixsee.
+- mother-state.json is owned by unixsee:unixsee.
+- Manual write+rename as unixsee succeeds.
+- storage.ok=true, storage.writable=true, storage.last_error empty.
+- No OS-level permission errors in journal after Agent fix.
+
+DIAGNOSIS:
+This is most likely a Mother JSON storage atomic-save concurrency bug:
+multiple saves may use the same fixed temp path mother-state.json.tmp, so one save can rename/remove the temp file while another concurrent save still expects it.
+
+GOAL:
+Fix Mother JSON storage save path to be concurrency-safe and atomic.
+
+STRICT SCOPE:
+- Only change Mother Go JSON storage implementation and tests.
+- Do NOT change Dashboard UI.
+- Do NOT change Agent behavior.
+- Do NOT change PHP Gateway runtime.
+- Do NOT change auth, RBAC, tokens, sessions, or management permissions.
+- Do NOT enable enforcement.
+- Do NOT add remote commands.
+- Do NOT expose Agent or Mother publicly.
+- Do NOT change API response contracts unless absolutely required.
+- Preserve JSON storage file format and backward compatibility.
+- Preserve PostgreSQL profile behavior.
+- Keep Agent shadow-only and local-only assumptions.
+
+REQUIRED FIX:
+1. Inspect Mother JSON storage save implementation.
+2. If it uses a fixed temp file like mother-state.json.tmp, replace it with a concurrency-safe atomic write:
+   - Serialize Save operations with a mutex on the JSON store instance.
+   - Use a unique temp file in the same directory, e.g. os.CreateTemp(dir, ".mother-state-*.tmp").
+   - Write full JSON to temp file.
+   - fsync temp file if feasible.
+   - close temp file.
+   - chmod/chown behavior should preserve safe permissions.
+   - os.Rename(tempPath, finalPath).
+   - best-effort cleanup temp file on error.
+   - optionally fsync directory after rename on Linux if already used in project style.
+3. Ensure backup file behavior, if any, does not race with concurrent saves.
+4. Make error messages precise and not misleading.
+5. Add tests that simulate concurrent Save calls and prove there is no missing temp/rename failure.
+6. Add regression test for successful repeated telemetry persistence under concurrent writes.
+7. Ensure existing tests pass.
+
+REQUIRED SAFETY VALIDATION:
+Run:
+- go test ./...
+- npm ci && npm run build in dashboard only if package contains dashboard and it is expected by release process.
+
+RELEASE NOTES:
+Add RELEASE_NOTES_R10_29.md with:
+- Cause: fixed-temp JSON save race under concurrent telemetry/policy/health updates.
+- Fix: concurrency-safe atomic JSON save.
+- Safety: no enforcement, no remote commands, no Dashboard/Mother token exposure, Agent remains shadow-only.
+- Server validation plan:
+  curl /v1/health/report
+  monitor recent_critical_events
+  journalctl since deployment
+  verify /v1/agents remains online/fresh
+
+OUTPUT:
+Create final zip:
+unixsee_campaign_gateway-r10.29-mother-json-storage-atomic-save-concurrency-fix.zip
+
+Also provide a concise change report:
+- files changed
+- tests run
+- why this fixes the observed rename temp error
+- deployment risk level
