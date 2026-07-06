@@ -21,6 +21,8 @@ import type {
   MotherAlertSummaryResponse,
   MotherReleaseGatesResponse,
   MotherReleaseGateSummary,
+  MotherEvidenceListResponse,
+  MotherEvidenceResponse,
   ReadyResponse,
   UnknownRecord
 } from "./types";
@@ -198,6 +200,26 @@ export function getMotherReleaseGates() {
 
 export function getMotherReleaseGateSummary() {
   return safeFetchJson<MotherReleaseGateSummary>(motherBaseUrl, "/v1/release-gates/summary");
+}
+
+export function getMotherReleaseEvidence() {
+  return safeFetchJson<MotherEvidenceListResponse>(motherBaseUrl, "/v1/release/evidence");
+}
+
+export function getMotherReleaseEvidenceById(evidenceId: string) {
+  return safeFetchJson<MotherEvidenceResponse>(motherBaseUrl, `/v1/release/evidence/${encodePathPart(evidenceId)}`);
+}
+
+export interface SubmitReleaseEvidenceInput {
+  gate_id: string;
+  status: string;
+  summary: string;
+  artifact_refs?: string[];
+  expires_at?: string;
+}
+
+export function submitMotherReleaseEvidence(input: SubmitReleaseEvidenceInput, actorHeaders: Record<string, string> = {}) {
+  return postMotherJson<MotherEvidenceResponse>("/v1/release/evidence", input, undefined, actorHeaders);
 }
 
 export function getMotherAlerts(params: { status?: string; agent_id?: string; scope?: string; limit?: number } = {}) {

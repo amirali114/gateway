@@ -258,6 +258,34 @@ export interface MotherReleaseGatesResponse {
   summary?: MotherReleaseGateSummary;
 }
 
+export type MotherEvidenceGateID = "php-wrapper-model" | "backup-restore-drill" | "release-evidence-collected";
+export type MotherEvidenceStatus = "pass" | "fail" | "accepted_risk" | "not_applicable";
+
+export interface MotherEvidenceRecord {
+  id?: string;
+  gate_id?: MotherEvidenceGateID | string;
+  status?: MotherEvidenceStatus | string;
+  summary?: string;
+  artifact_refs?: string[];
+  metadata?: UnknownRecord;
+  expires_at?: string;
+  created_at?: string;
+  created_by?: string;
+  updated_at?: string;
+  updated_by?: string;
+}
+
+export interface MotherEvidenceListResponse {
+  ok?: boolean;
+  evidence?: MotherEvidenceRecord[];
+}
+
+export interface MotherEvidenceResponse {
+  ok?: boolean;
+  evidence?: MotherEvidenceRecord;
+  error?: string;
+}
+
 export interface MotherDiagnosticsResponse {
   ok?: boolean;
   diagnostics?: {

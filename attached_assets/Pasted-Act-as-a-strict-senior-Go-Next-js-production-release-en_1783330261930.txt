@@ -1,0 +1,223 @@
+Act as a strict senior Go/Next.js production release engineer.
+
+PROJECT:
+Unixsee Campaign Gateway
+
+BASE ZIP:
+unixsee_campaign_gateway-r10.29-mother-json-storage-atomic-save-concurrency-fix-deploy-safe.zip
+
+CREATE:
+unixsee_campaign_gateway-r10.30-operator-release-evidence-ledger.zip
+
+CURRENT PRODUCTION STATE:
+R10.29 has been deployed successfully as a Mother-only fix.
+Validation results:
+- unixsee-mother.service active/enabled
+- unixsee-agent.service active/enabled
+- Agent staging-agent-001 online/fresh
+- Active config version 1
+- Acknowledged config version 1
+- config_sync_status acknowledged
+- Mother storage ok
+- storage.last_error empty
+- no new mother-state rename errors after R10.29
+- safe release evidence bundle created by operator:
+  /root/uxgw-r10.29-final-operator-evidence-20260706-112710.tar.gz
+
+CURRENT PROBLEM:
+Release gate summary still shows label "نیازمند بررسی" / Conditional with 3 unknown gates:
+1. php-wrapper-model
+2. backup-restore-drill
+3. release-evidence-collected
+
+Reason:
+Mother currently reports these gates as operator/manual evidence requirements, but it has no durable model or management API to ingest/record operator-attached evidence. The provided scripts collect evidence files, but Mother release gates do not read or persist this evidence.
+
+GOAL:
+Add a safe Operator Release Evidence Ledger to Mother and Dashboard so manual/operator evidence can be recorded, audited, and used by release gate evaluation.
+
+CRITICAL SAFETY RULES:
+- Do NOT enable enforcement.
+- Do NOT add remote commands.
+- Do NOT execute shell commands from Dashboard or Mother.
+- Do NOT allow arbitrary server file reads from an API.
+- Do NOT expose Mother token to browser.
+- Do NOT expose Agent publicly.
+- Do NOT change Agent runtime behavior.
+- Do NOT change PHP Gateway runtime.
+- Do NOT change auth/session/RBAC logic except adding the minimal permission name if already required by existing RBAC pattern.
+- Do NOT upload or store backup archives in Mother.
+- Do NOT store secrets, tokens, cookies, env contents, or raw archives in Mother.
+- Preserve current JSON storage schema compatibility by adding new optional fields only.
+- Preserve PostgreSQL profile behavior if interfaces require updates.
+- Dashboard remains server-side Mother API caller only.
+
+DESIGN REQUIREMENT:
+Implement an Operator Evidence Ledger in Mother.
+
+Evidence records should support:
+- evidence_id: stable id, e.g.
+  - php-wrapper-model
+  - backup-restore-drill
+  - release-evidence-collected
+- status:
+  - pass
+  - fail
+  - accepted_risk
+  - not_applicable
+- summary: short human-readable summary
+- artifact_refs: array of safe references only, e.g. filenames, sha256 hashes, generated_at, operator notes
+- created_at / updated_at
+- created_by / updated_by
+- expires_at optional
+- metadata optional, but must be sanitized and must not contain secrets
+
+Evidence records must be persisted in Mother JSON storage and included in storage persisted_objects count if appropriate.
+
+Mother management API:
+- GET /v1/release/evidence
+- GET /v1/release/evidence/{evidence_id}
+- POST /v1/release/evidence/{evidence_id}
+
+POST requires management write auth:
+Authorization: Bearer <management token>
+
+POST body example:
+{
+  "status": "pass",
+  "summary": "Operator evidence bundle collected and attached.",
+  "artifact_refs": [
+    {
+      "name": "uxgw-r10.29-final-operator-evidence-20260706-112710.tar.gz",
+      "sha256": "...",
+      "type": "operator_bundle"
+    }
+  ],
+  "metadata": {
+    "source": "operator",
+    "version": "R10.29"
+  }
+}
+
+Validation:
+- evidence_id must be one of the known release gate ids or match a safe id pattern.
+- status must be one of pass/fail/accepted_risk/not_applicable.
+- reject metadata/artifact values containing obvious secret keywords or overly large payloads.
+- limit request size.
+- no file path reading.
+- no file upload.
+- no command execution.
+- raw artifact paths under /root may be mentioned as text only if provided by operator, but Mother must not read them.
+
+Release gate integration:
+Update release gate evaluation so:
+1. release-evidence-collected:
+   - pass if ledger has evidence_id release-evidence-collected with status pass.
+   - fail if status fail.
+   - warn/unknown if missing.
+2. backup-restore-drill:
+   - pass if ledger has backup-restore-drill with status pass.
+   - accepted_risk may become warn but not fail.
+   - missing remains unknown.
+3. php-wrapper-model:
+   - pass only if ledger has php-wrapper-model with status pass.
+   - not_applicable should be allowed for local Mother/Agent staging where no client webroot is deployed, but release summary must clearly show "not applicable by operator attestation", not silently pass.
+   - accepted_risk should remain warning, not pass.
+   - missing remains unknown.
+
+Important:
+Do not make release ready falsely. The summary should distinguish:
+- ready/pass
+- ready with accepted manual evidence
+- conditional/unknown
+- fail/blocker
+
+Dashboard:
+Add a new read-only-first page or section:
+Release Evidence
+
+It should show:
+- evidence records
+- status
+- summary
+- artifact refs
+- updated_at
+- updated_by
+
+If adding write UI:
+- only show server actions for users with release.manage or equivalent existing permission pattern.
+- browser must never receive Mother management token.
+- form only submits metadata/status text to Dashboard server action, then Dashboard server action calls Mother with server-side token.
+- no file upload.
+- no remote command button.
+- no "run script" button.
+
+Also update Release page:
+- show evidence ledger status beside affected gates.
+- show remaining missing evidence clearly.
+- do not hide warnings.
+
+CLI/operator helper:
+Add a safe script:
+deploy/scripts/attach-release-evidence.sh
+
+This script should:
+- read environment variables:
+  MOTHER_URL default http://127.0.0.1:8732
+  EVIDENCE_ID required
+  STATUS required
+  SUMMARY required
+  ARTIFACT_NAME optional
+  ARTIFACT_SHA256 optional
+  METADATA_JSON optional
+  MANAGEMENT_TOKEN_FILE optional, default from /etc/unixsee-gateway/mother.yml api_token_file if possible
+- POST metadata only to Mother
+- never upload archive content
+- never read arbitrary artifact content except computing sha256 only when operator explicitly provides ARTIFACT_PATH
+- if ARTIFACT_PATH is used, only compute sha256 and basename; do not upload content
+- print redacted output
+- fail closed on missing management token
+
+Tests:
+Mother:
+- evidence create/read/list persists in JSON store.
+- invalid status rejected.
+- obvious secret-looking metadata rejected.
+- release gates update when evidence is attached.
+- missing evidence remains unknown.
+- not_applicable php-wrapper-model is represented clearly and does not silently hide the manual nature.
+- management token required for POST.
+
+Dashboard:
+- build passes.
+- evidence page does not expose token.
+- release page renders ledger-backed gates.
+
+Validation commands:
+- cd mother && go test ./...
+- cd mother && go vet ./...
+- cd dashboard && npm ci && npm run build
+
+Release notes:
+Add RELEASE_NOTES_R10_30.md covering:
+- added operator release evidence ledger
+- no remote commands
+- no enforcement
+- no runtime PHP Gateway change
+- no Agent behavior change
+- no secret/archive ingestion
+- how to attach R10.29 evidence bundle by sha256
+- how release gates interpret pass/fail/accepted_risk/not_applicable
+
+OUTPUT:
+Create final zip:
+unixsee_campaign_gateway-r10.30-operator-release-evidence-ledger.zip
+
+Also provide:
+- files changed
+- tests run
+- exact example commands to attach:
+  release-evidence-collected
+  backup-restore-drill
+  php-wrapper-model as not_applicable for local staging without target webroot
+- expected release gate summary after attaching evidence

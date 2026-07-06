@@ -16,6 +16,7 @@ export const PERMISSIONS = [
   "alerts.view",
   "alerts.manage",
   "release.view",
+  "release.manage",
   "settings.view",
   "users.view",
   "users.manage",
@@ -41,6 +42,7 @@ const rolePermissions: Record<Role, Permission[]> = {
     "alerts.view",
     "alerts.manage",
     "release.view",
+    "release.manage",
     "settings.view",
     "users.view",
     "audit.view"
@@ -104,6 +106,7 @@ export function permissionLabel(permission: Permission | string): string {
     "alerts.view": "View alerts",
     "alerts.manage": "Manage alerts",
     "release.view": "View release readiness",
+    "release.manage": "Manage release evidence",
     "settings.view": "View settings",
     "users.view": "View users",
     "users.manage": "Manage users",

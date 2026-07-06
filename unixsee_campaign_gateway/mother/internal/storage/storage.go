@@ -88,6 +88,9 @@ type Store interface {
 	UnmuteAlert(ctx context.Context, alertID string, actor string) (AlertRecord, error)
 	AlertSummary(ctx context.Context) (AlertSummary, error)
 	StorageStatus(ctx context.Context) StorageStatus
+	ListEvidence(ctx context.Context) ([]EvidenceRecord, error)
+	GetEvidenceByID(ctx context.Context, id string) (EvidenceRecord, error)
+	PutEvidence(ctx context.Context, rec EvidenceRecord) (EvidenceRecord, error)
 }
 
 type Options struct {
@@ -153,6 +156,47 @@ type AlertSummary struct {
 	Latest      []AlertRecord  `json:"latest"`
 	GeneratedAt time.Time      `json:"generated_at"`
 }
+
+// EvidenceRecord captures manually-attested, operator-recorded evidence for a
+// release gate (e.g. php-wrapper-model, backup-restore-drill,
+// release-evidence-collected). Mother never executes commands, reads files,
+// or verifies the evidence itself — this is an audit ledger of operator
+// attestations only. Storage of this record is additive/optional; existing
+// jsonState/StorageStatus consumers are unaffected when no evidence exists.
+type EvidenceRecord struct {
+	ID           string         `json:"id"`
+	GateID       string         `json:"gate_id"`
+	Status       string         `json:"status"`
+	Summary      string         `json:"summary"`
+	ArtifactRefs []string       `json:"artifact_refs,omitempty"`
+	Metadata     map[string]any `json:"metadata,omitempty"`
+	ExpiresAt    time.Time      `json:"expires_at,omitempty"`
+	CreatedAt    time.Time      `json:"created_at"`
+	CreatedBy    string         `json:"created_by,omitempty"`
+	UpdatedAt    time.Time      `json:"updated_at"`
+	UpdatedBy    string         `json:"updated_by,omitempty"`
+}
+
+// EvidenceStatuses lists the only accepted evidence statuses. Mother does not
+// enforce release gates from these values; it only reflects them for operator
+// review on the gate evaluation surface.
+const (
+	EvidenceStatusPass          = "pass"
+	EvidenceStatusFail          = "fail"
+	EvidenceStatusAcceptedRisk  = "accepted_risk"
+	EvidenceStatusNotApplicable = "not_applicable"
+)
+
+func ValidEvidenceStatus(status string) bool {
+	switch status {
+	case EvidenceStatusPass, EvidenceStatusFail, EvidenceStatusAcceptedRisk, EvidenceStatusNotApplicable:
+		return true
+	default:
+		return false
+	}
+}
+
+var ErrEvidenceNotFound = fmt.Errorf("evidence not found")
 
 type PolicyRecord struct {
 	ID        string         `json:"id"`
@@ -398,25 +442,27 @@ func NewStore(opts Options) (Store, error) {
 }
 
 type MemoryStore struct {
-	mu            sync.RWMutex
-	policies      map[string]PolicyRecord
-	assignments   map[string]AssignmentRecord
-	agents        map[string]AgentRecord
-	activeConfigs map[string]ConfigRecord
-	draftConfigs  map[string]ConfigRecord
-	history       map[string][]ConfigRecord
-	telemetry     map[string]TelemetryRecord
-	events        map[string][]EventRecord
-	alerts        map[string]AlertRecord
-	alertByFP     map[string]string
-	nextEventID   uint64
-	nextAlertID   uint64
+	mu             sync.RWMutex
+	policies       map[string]PolicyRecord
+	assignments    map[string]AssignmentRecord
+	agents         map[string]AgentRecord
+	activeConfigs  map[string]ConfigRecord
+	draftConfigs   map[string]ConfigRecord
+	history        map[string][]ConfigRecord
+	telemetry      map[string]TelemetryRecord
+	events         map[string][]EventRecord
+	alerts         map[string]AlertRecord
+	alertByFP      map[string]string
+	evidence       map[string]EvidenceRecord
+	nextEventID    uint64
+	nextAlertID    uint64
+	nextEvidenceID uint64
 }
 
 func NewMemoryStore() *MemoryStore {
 	now := time.Now().UTC()
 	defaultPolicy := policy.DefaultRemotePolicy()
-	return &MemoryStore{policies: map[string]PolicyRecord{DefaultPolicyID: {ID: DefaultPolicyID, Profile: defaultPolicy, IsDefault: true, CreatedAt: now, UpdatedAt: now}}, assignments: map[string]AssignmentRecord{}, agents: map[string]AgentRecord{}, activeConfigs: map[string]ConfigRecord{}, draftConfigs: map[string]ConfigRecord{}, history: map[string][]ConfigRecord{}, telemetry: map[string]TelemetryRecord{}, events: map[string][]EventRecord{}, alerts: map[string]AlertRecord{}, alertByFP: map[string]string{}}
+	return &MemoryStore{policies: map[string]PolicyRecord{DefaultPolicyID: {ID: DefaultPolicyID, Profile: defaultPolicy, IsDefault: true, CreatedAt: now, UpdatedAt: now}}, assignments: map[string]AssignmentRecord{}, agents: map[string]AgentRecord{}, activeConfigs: map[string]ConfigRecord{}, draftConfigs: map[string]ConfigRecord{}, history: map[string][]ConfigRecord{}, telemetry: map[string]TelemetryRecord{}, events: map[string][]EventRecord{}, alerts: map[string]AlertRecord{}, alertByFP: map[string]string{}, evidence: map[string]EvidenceRecord{}}
 }
 func (s *MemoryStore) Open(ctx context.Context) error   { return ctx.Err() }
 func (s *MemoryStore) Close() error                     { return nil }
@@ -1098,7 +1144,75 @@ func (s *MemoryStore) countsLocked() map[string]int {
 	for _, items := range s.events {
 		eventItems += len(items)
 	}
-	return map[string]int{"policies": len(s.policies), "assignments": len(s.assignments), "agents": len(s.agents), "active_configs": len(s.activeConfigs), "draft_configs": len(s.draftConfigs), "history_items": historyItems, "telemetry": len(s.telemetry), "events": eventItems, "alerts": len(s.alerts)}
+	return map[string]int{"policies": len(s.policies), "assignments": len(s.assignments), "agents": len(s.agents), "active_configs": len(s.activeConfigs), "draft_configs": len(s.draftConfigs), "history_items": historyItems, "telemetry": len(s.telemetry), "events": eventItems, "alerts": len(s.alerts), "evidence": len(s.evidence)}
+}
+
+func (s *MemoryStore) ListEvidence(ctx context.Context) ([]EvidenceRecord, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	s.mu.RLock()
+	out := make([]EvidenceRecord, 0, len(s.evidence))
+	for _, rec := range s.evidence {
+		out = append(out, rec)
+	}
+	s.mu.RUnlock()
+	sort.Slice(out, func(i, j int) bool {
+		if out[i].GateID != out[j].GateID {
+			return out[i].GateID < out[j].GateID
+		}
+		return out[i].CreatedAt.After(out[j].CreatedAt)
+	})
+	return out, nil
+}
+
+func (s *MemoryStore) GetEvidenceByID(ctx context.Context, id string) (EvidenceRecord, error) {
+	if err := ctx.Err(); err != nil {
+		return EvidenceRecord{}, err
+	}
+	id = strings.TrimSpace(id)
+	s.mu.RLock()
+	rec, ok := s.evidence[id]
+	s.mu.RUnlock()
+	if !ok {
+		return EvidenceRecord{}, ErrEvidenceNotFound
+	}
+	return rec, nil
+}
+
+// PutEvidence stores a new operator-attested evidence record. Mother does not
+// verify, execute, or fetch any evidence content — it only persists what the
+// caller supplies (subject to size limits enforced at the HTTP layer) and
+// stamps created/updated actor + timestamps.
+func (s *MemoryStore) PutEvidence(ctx context.Context, rec EvidenceRecord) (EvidenceRecord, error) {
+	if err := ctx.Err(); err != nil {
+		return EvidenceRecord{}, err
+	}
+	rec.GateID = strings.TrimSpace(rec.GateID)
+	if rec.GateID == "" {
+		return EvidenceRecord{}, fmt.Errorf("empty gate_id")
+	}
+	if !ValidEvidenceStatus(rec.Status) {
+		return EvidenceRecord{}, fmt.Errorf("invalid evidence status %q", rec.Status)
+	}
+	now := time.Now().UTC()
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	id := strings.TrimSpace(rec.ID)
+	if id == "" {
+		s.nextEvidenceID++
+		id = fmt.Sprintf("ev-%d", s.nextEvidenceID)
+	}
+	rec.ID = id
+	if existing, ok := s.evidence[id]; ok {
+		rec.CreatedAt = existing.CreatedAt
+		rec.CreatedBy = existing.CreatedBy
+	} else {
+		rec.CreatedAt = now
+	}
+	rec.UpdatedAt = now
+	s.evidence[id] = rec
+	return rec, nil
 }
 func (s *MemoryStore) addEventLocked(agentID string, typ string, severity string, message string, metadata map[string]any) {
 	agentID = strings.TrimSpace(agentID)

@@ -44,6 +44,8 @@ func New(cfg config.Config, log *logger.Logger, store storage.Store) *Server {
 	mux.HandleFunc("/v1/alerts/", s.alertRoutes)
 	mux.HandleFunc("/v1/release-gates", s.releaseGates)
 	mux.HandleFunc("/v1/release-gates/summary", s.releaseGatesSummary)
+	mux.HandleFunc("/v1/release/evidence", s.releaseEvidence)
+	mux.HandleFunc("/v1/release/evidence/", s.releaseEvidenceByID)
 	mux.HandleFunc("/v1/health/report", s.healthReport)
 	mux.HandleFunc("/v1/debug/policies/default", s.defaultPolicy)
 	mux.HandleFunc("/v1/policies", s.policies)

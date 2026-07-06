@@ -175,10 +175,60 @@ func (s *Server) evaluateReleaseGates(ctx context.Context) []ReleaseGate {
 	gates = append(gates, gate("active-alerts", "Active alerts", "observability", alertStatus, alertSeverity, alertMsg, "Review /alerts and resolve or document accepted warnings.", map[string]any{"critical": alertSummary.Critical, "warn": alertSummary.Warn, "info": alertSummary.Info, "active_total": alertSummary.ActiveTotal}))
 
 	gates = append(gates, gate("shadow-only-config", "Shadow-only safety", "security", gatePass, "info", "Control config validation only accepts gateway.mode=shadow.", "Keep enforcement disabled; do not add enforce UI/routes.", map[string]any{"mode": "shadow", "enforcement_enabled": false}))
-	gates = append(gates, gate("php-wrapper-model", "PHP wrapper/private runtime model", "php_gateway", gateUnknown, "warn", "Runtime exposure must be validated on the target webroot.", "Run validate-php-wrapper-exposure.sh or validate-public-exposure-hardening.sh on the client server.", map[string]any{"public_wrapper_only": "script-validated"}))
-	gates = append(gates, gate("backup-restore-drill", "Backup/restore drill", "backup_restore", gateUnknown, "warn", "Backup/restore drill evidence is not reported to Mother automatically.", "Run drill-backup-restore-core.sh and drill-backup-restore-client.sh before go/no-go.", nil))
-	gates = append(gates, gate("release-evidence-collected", "Release evidence collected", "documentation", gateUnknown, "warn", "Release evidence is collected by operator script.", "Run collect-release-evidence.sh and attach output to the beta release note.", nil))
+
+	var evidenceList []storage.EvidenceRecord
+	if s.store != nil {
+		evidenceList, _ = s.store.ListEvidence(ctx)
+	}
+	gates = append(gates, s.evidenceGate(evidenceList, "php-wrapper-model", "PHP wrapper/private runtime model", "php_gateway",
+		"Runtime exposure must be validated on the target webroot.",
+		"Run validate-php-wrapper-exposure.sh or validate-public-exposure-hardening.sh on the client server, then attach the result via the Release Evidence Ledger."))
+	gates = append(gates, s.evidenceGate(evidenceList, "backup-restore-drill", "Backup/restore drill", "backup_restore",
+		"Backup/restore drill evidence is not reported to Mother automatically.",
+		"Run drill-backup-restore-core.sh and drill-backup-restore-client.sh before go/no-go, then attach the result via the Release Evidence Ledger."))
+	gates = append(gates, s.evidenceGate(evidenceList, "release-evidence-collected", "Release evidence collected", "documentation",
+		"Release evidence is collected by operator script.",
+		"Run collect-release-evidence.sh and attach output via the Release Evidence Ledger."))
 	return gates
+}
+
+// evidenceGate evaluates a manual-evidence gate by reading the Release
+// Evidence Ledger. It never falsely reports "ready": with no evidence
+// recorded the gate remains gateUnknown/warn exactly as before R10.30. An
+// operator-recorded evidence status maps directly onto the gate outcome so
+// operators can see exactly what was attested and by whom, without Mother
+// executing or verifying anything itself.
+func (s *Server) evidenceGate(evidenceList []storage.EvidenceRecord, id, title, category, unknownMessage, remediation string) ReleaseGate {
+	now := time.Now().UTC()
+	rec := latestEvidenceForGate(evidenceList, id)
+	if rec == nil {
+		return ReleaseGate{ID: id, Title: title, Category: category, Status: gateUnknown, Severity: "warn", Message: unknownMessage, Evidence: map[string]any{"has_evidence": false}, RemediationHint: remediation, LastCheckedAt: now}
+	}
+	evidence := map[string]any{
+		"has_evidence":    true,
+		"evidence_id":     rec.ID,
+		"recorded_by":     rec.CreatedBy,
+		"updated_by":      rec.UpdatedBy,
+		"recorded_at":     rec.CreatedAt,
+		"updated_at":      rec.UpdatedAt,
+		"summary":         rec.Summary,
+		"attested_status": rec.Status,
+	}
+	if !rec.ExpiresAt.IsZero() {
+		evidence["expires_at"] = rec.ExpiresAt
+	}
+	switch rec.Status {
+	case storage.EvidenceStatusPass:
+		return ReleaseGate{ID: id, Title: title, Category: category, Status: gatePass, Severity: "info", Message: "Operator-attested evidence recorded: " + rec.Summary, Evidence: evidence, RemediationHint: remediation, LastCheckedAt: now}
+	case storage.EvidenceStatusFail:
+		return ReleaseGate{ID: id, Title: title, Category: category, Status: gateFail, Severity: "critical", Message: "Operator-attested evidence reports failure: " + rec.Summary, Evidence: evidence, RemediationHint: remediation, LastCheckedAt: now}
+	case storage.EvidenceStatusAcceptedRisk:
+		return ReleaseGate{ID: id, Title: title, Category: category, Status: gateWarn, Severity: "warn", Message: "Operator accepted risk for this gate: " + rec.Summary, Evidence: evidence, RemediationHint: remediation, LastCheckedAt: now}
+	case storage.EvidenceStatusNotApplicable:
+		return ReleaseGate{ID: id, Title: title, Category: category, Status: gateSkipped, Severity: "info", Message: "Operator marked this gate not applicable: " + rec.Summary, Evidence: evidence, RemediationHint: remediation, LastCheckedAt: now}
+	default:
+		return ReleaseGate{ID: id, Title: title, Category: category, Status: gateUnknown, Severity: "warn", Message: unknownMessage, Evidence: evidence, RemediationHint: remediation, LastCheckedAt: now}
+	}
 }
 
 func summarizeReleaseGates(gates []ReleaseGate) ReleaseGateSummary {
