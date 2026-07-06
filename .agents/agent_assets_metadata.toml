@@ -30,3 +30,15 @@ id = "cez9JdHcS5CAD_bjw3dJx"
 uri = "file://.local/release/unixsee_campaign_gateway-r10.28-live-data-agent-registration-verification.zip"
 type = "unspecified"
 title = "R10.28 Live Data / Agent Registration Verification (Audit)"
+
+[[outputs]]
+id = "O-gmltx4vnJlugSI4S4fO"
+uri = "file://.local/release/unixsee_campaign_gateway-r10.29-mother-json-storage-atomic-save-concurrency-fix.zip"
+type = "unspecified"
+title = "R10.29 - Mother JSON Storage Atomic-Save Concurrency Fix"
+
+[[outputs]]
+id = "HX22D1KPgWOFBQL2r9WCi"
+uri = "file://unixsee_campaign_gateway/RELEASE_NOTES_R10_29.md"
+type = "text"
+title = "Release Notes R10.29"

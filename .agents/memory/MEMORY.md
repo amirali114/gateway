@@ -1,1 +1,2 @@
 - [Next.js apps on Replit artifacts](nextjs-on-replit-artifacts.md) — custom artifact.toml, 0.0.0.0 bind, X-Frame-Options/allowedDevOrigins, absolute-URL redirect and writable-storage-path pitfalls behind the proxy.
+- [Go atomic file save concurrency](go-atomic-file-save-concurrency.md) — fixed temp-path "atomic save" races under concurrent callers; fix with unique temp file + dedicated save mutex, test with concurrent goroutines.

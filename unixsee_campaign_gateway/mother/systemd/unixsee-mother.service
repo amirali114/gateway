@@ -1,0 +1,20 @@
+[Unit]
+Description=Unixsee Mother/Core Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=unixsee-mother
+Group=unixsee-mother
+ExecStart=/usr/local/unixsee-mother/unixsee-mother --config /etc/unixsee-mother/mother.yml
+Restart=always
+RestartSec=2
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/var/lib/unixsee-gateway/mother /var/log/unixsee-mother
+
+[Install]
+WantedBy=multi-user.target
